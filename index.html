@@ -907,16 +907,162 @@
   }
   .admin-modal-close:hover { color: var(--fire); }
 
+  /* ---- HAMBURGER BUTTON ---- */
+  .nav-hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 36px; height: 36px;
+    background: none; border: none;
+    cursor: pointer; padding: 4px;
+    z-index: 1100;
+  }
+  .nav-hamburger span {
+    display: block;
+    width: 100%; height: 2px;
+    background: var(--black);
+    border-radius: 2px;
+    transition: all 0.3s ease;
+    transform-origin: center;
+  }
+  .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+  .nav-hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+  /* ---- MOBILE MENU OVERLAY ---- */
+  .nav-mobile-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.98);
+    backdrop-filter: blur(8px);
+    z-index: 1050;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .nav-mobile-overlay.open {
+    display: flex;
+    opacity: 1;
+  }
+  .nav-mobile-overlay a {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px;
+    letter-spacing: 6px;
+    color: var(--black);
+    text-decoration: none;
+    padding: 14px 0;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid #f0f0f0;
+    transition: color 0.2s;
+  }
+  .nav-mobile-overlay a:first-child { border-top: 1px solid #f0f0f0; }
+  .nav-mobile-overlay a:hover { color: var(--fire); }
+  .nav-mobile-close {
+    margin-top: 32px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: #aaa;
+    background: none;
+    border: 1px solid #ddd;
+    padding: 10px 24px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-mobile-close:hover { color: var(--fire); border-color: var(--fire); }
+
   /* ---- RESPONSIVE ---- */
   @media (max-width: 768px) {
-    nav { padding: 16px 24px; }
+    /* Navbar */
+    nav { padding: 14px 20px; }
     .nav-links { display: none; }
-    section { padding: 80px 24px; }
-    #about { grid-template-columns: 1fr; gap: 48px; }
-    #videos, #gallery, .instagram-bar { padding: 80px 24px; }
-    footer { padding: 48px 24px; }
-    .hero-cta { flex-direction: column; align-items: center; }
-    .about-stats { grid-template-columns: 1fr 1fr; }
+    .nav-hamburger { display: flex; }
+    .nav-logo img { height: 36px; }
+    .nav-logo-text { font-size: 22px; letter-spacing: 3px; }
+
+    /* Hero */
+    #hero { padding: 100px 20px 70px; min-height: 100svh; }
+    .hero-logo-img { width: 100px; margin-bottom: 24px; }
+    .hero-title { font-size: clamp(56px, 18vw, 90px); letter-spacing: 3px; }
+    .hero-sub { font-size: 13px; letter-spacing: 4px; margin-top: 14px; }
+    .hero-divider { margin: 28px auto; }
+    .hero-cta { flex-direction: column; align-items: center; gap: 12px; }
+    .hero-cta .btn-primary, .hero-cta .btn-ghost { width: 100%; max-width: 280px; justify-content: center; }
+    .hero-eyebrow { font-size: 10px; letter-spacing: 6px; }
+
+    /* Featured video */
+    #featured-video-section { padding: 60px 20px; }
+
+    /* About */
+    section { padding: 70px 20px; }
+    #about { grid-template-columns: 1fr; gap: 40px; padding: 70px 20px; }
+    .about-stats { grid-template-columns: 1fr 1fr; gap: 2px; }
+    .stat-box { padding: 24px 16px; }
+    .stat-num { font-size: 44px; }
+    .about-text p { font-size: 15px; }
+    .section-title { font-size: clamp(38px, 10vw, 60px); }
+
+    /* Videos */
+    #videos { padding: 70px 20px; }
+    .videos-inner { padding: 0 !important; }
+    .videos-grid { grid-template-columns: 1fr; gap: 3px; }
+
+    /* Gallery */
+    #gallery { padding: 70px 20px; }
+    .gallery-upload { padding: 28px 16px; }
+    .gallery-admin-bar { flex-direction: column; align-items: flex-start; gap: 12px; }
+    .photo-grid { grid-template-columns: repeat(2, 1fr); gap: 3px; }
+    #caption-input-wrap { padding: 0; }
+
+    /* Members */
+    #members { padding: 70px 20px; }
+    .members-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .member-card { padding: 24px 16px 20px; }
+    .member-photo-wrap { width: 80px; height: 80px; }
+    .member-name { font-size: 20px; }
+    .add-member-form { grid-template-columns: 1fr; }
+    #members-admin-bar > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
+
+    /* Contact */
+    #contact { padding: 70px 20px; }
+    .contact-inner { grid-template-columns: 1fr; gap: 40px; }
+    .contact-info-item { margin-bottom: 20px; }
+
+    /* Instagram bar */
+    .instagram-bar { padding: 50px 20px; }
+    .ig-handle { font-size: clamp(32px, 10vw, 56px); }
+
+    /* Footer */
+    footer { padding: 40px 20px; flex-direction: column; align-items: flex-start; gap: 24px; }
+    .footer-links { gap: 20px; }
+    .footer-copy { font-size: 11px; }
+
+    /* Admin messages */
+    .admin-messages-panel { padding-top: 28px; }
+    .admin-msg-card { padding: 16px; }
+    .admin-msg-meta { flex-wrap: wrap; gap: 8px; }
+    .admin-msg-time { margin-left: 0; }
+
+    /* Lightbox controls */
+    #lightbox-controls { gap: 8px; }
+    .lb-btn { width: 38px; height: 38px; font-size: 18px; }
+
+    /* Modal */
+    .modal-inner { width: 96%; }
+    .modal-close { font-size: 20px; top: -40px; }
+  }
+
+  @media (max-width: 400px) {
+    .photo-grid { grid-template-columns: 1fr; }
+    .members-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: clamp(48px, 16vw, 72px); }
   }
 
   /* ---- REVEAL ANIMATIONS ---- */
@@ -1350,7 +1496,21 @@
     <li><a href="#contact">Kontakt</a></li>
     <li><a href="https://www.instagram.com/rakettaci_/" target="_blank">Instagram</a></li>
   </ul>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- MOBILE MENU OVERLAY -->
+<div class="nav-mobile-overlay" id="nav-mobile-overlay">
+  <a href="#about" onclick="closeMobileMenu()">O nás</a>
+  <a href="#members" onclick="closeMobileMenu()">Členové</a>
+  <a href="#videos" onclick="closeMobileMenu()">Videa</a>
+  <a href="#gallery" onclick="closeMobileMenu()">Galerie</a>
+  <a href="#contact" onclick="closeMobileMenu()">Kontakt</a>
+  <a href="https://www.instagram.com/rakettaci_/" target="_blank" onclick="closeMobileMenu()">Instagram</a>
+  <button class="nav-mobile-close" onclick="closeMobileMenu()">✕ Zavřít</button>
+</div>
 
 <!-- HERO -->
 <div id="hero">
@@ -2200,6 +2360,27 @@ window.clearFeaturedVideo = clearFeaturedVideo;
 loadFeaturedVideo();
 
 
+
+// ---- MOBILE HAMBURGER MENU ----
+const hamburger = document.getElementById('nav-hamburger');
+const mobileOverlay = document.getElementById('nav-mobile-overlay');
+
+function openMobileMenu() {
+  hamburger.classList.add('open');
+  mobileOverlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobileMenu() {
+  hamburger.classList.remove('open');
+  mobileOverlay.classList.remove('open');
+  document.body.style.overflow = '';
+}
+window.closeMobileMenu = closeMobileMenu;
+
+hamburger.addEventListener('click', () => {
+  if (mobileOverlay.classList.contains('open')) closeMobileMenu();
+  else openMobileMenu();
+});
 
 // Allow Enter key on login
 document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
