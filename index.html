@@ -1116,6 +1116,200 @@
   }
   .lightbox-close:hover { color: var(--fire); }
 
+  /* ---- CONTACT SECTION ---- */
+  #contact {
+    background: var(--offwhite);
+    padding: 100px 48px;
+  }
+  .contact-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: start;
+  }
+  @media (max-width: 768px) {
+    .contact-inner { grid-template-columns: 1fr; gap: 48px; }
+    #contact { padding: 80px 24px; }
+  }
+  .contact-form-wrap { display: flex; flex-direction: column; gap: 16px; }
+  .contact-input, .contact-textarea {
+    background: #fff;
+    border: 1px solid #ddd;
+    color: #111;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.25s;
+    width: 100%;
+  }
+  .contact-input:focus, .contact-textarea:focus { border-color: var(--fire); }
+  .contact-input::placeholder, .contact-textarea::placeholder { color: #aaa; }
+  .contact-textarea { resize: vertical; min-height: 130px; }
+  .contact-info-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .contact-info-icon {
+    width: 44px; height: 44px;
+    border: 1px solid #ddd;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fire); font-size: 18px; flex-shrink: 0;
+  }
+  .contact-info-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: #999; margin-bottom: 4px;
+  }
+  .contact-info-value {
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px; color: #333;
+  }
+  .contact-success {
+    display: none;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.4);
+    color: #16a34a;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 14px 20px; text-align: center;
+  }
+  .contact-success.show { display: block; }
+
+  /* ---- ADMIN MESSAGES PANEL ---- */
+  .admin-messages-panel {
+    margin-top: 48px;
+    border-top: 1px solid #ddd;
+    padding-top: 40px;
+  }
+  .admin-messages-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 3px; margin-bottom: 24px;
+    color: var(--black);
+  }
+  .admin-msg-list { display: flex; flex-direction: column; gap: 12px; }
+  .admin-msg-card {
+    background: #fff;
+    border: 1px solid #e8e8e8;
+    border-left: 3px solid var(--fire);
+    padding: 20px 24px;
+    position: relative;
+  }
+  .admin-msg-meta {
+    display: flex; align-items: center; gap: 16px;
+    margin-bottom: 8px;
+  }
+  .admin-msg-name {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+    font-weight: 600; color: var(--black);
+  }
+  .admin-msg-email {
+    font-family: 'Barlow', sans-serif;
+    font-size: 13px; color: var(--fire);
+  }
+  .admin-msg-time {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 2px; color: #aaa; margin-left: auto;
+  }
+  .admin-msg-text {
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px; color: #444; line-height: 1.6;
+  }
+  .admin-msg-delete {
+    position: absolute; top: 12px; right: 12px;
+    background: none; border: none; color: #ccc; font-size: 16px;
+    cursor: pointer; transition: color 0.2s;
+  }
+  .admin-msg-delete:hover { color: var(--fire); }
+  .admin-msg-empty {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    color: #bbb; text-align: center; padding: 40px 0;
+  }
+
+  /* ---- MEMBERS SECTION ---- */
+  #members {
+    padding: 100px 48px;
+    background: var(--white);
+  }
+  .members-inner { max-width: 1200px; margin: 0 auto; }
+  .members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 24px;
+    margin-top: 8px;
+  }
+  .member-card {
+    background: var(--offwhite);
+    border: 1px solid #e8e8e8;
+    text-align: center;
+    padding: 36px 24px 28px;
+    transition: border-color 0.3s, transform 0.3s;
+    position: relative; overflow: hidden;
+  }
+  .member-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0;
+    height: 3px;
+    background: var(--fire);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  .member-card:hover { border-color: var(--fire); transform: translateY(-4px); }
+  .member-card:hover::before { transform: scaleX(1); }
+  .member-photo-wrap {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    margin: 0 auto 20px;
+    overflow: hidden;
+    border: 3px solid #e0e0e0;
+    transition: border-color 0.3s;
+    background: #ddd;
+    position: relative;
+  }
+  .member-card:hover .member-photo-wrap { border-color: var(--fire); }
+  .member-photo-wrap img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .member-photo-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 40px;
+    background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+    color: #bbb;
+  }
+  .member-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 26px; letter-spacing: 3px;
+    color: var(--black); margin-bottom: 6px;
+  }
+  .member-role {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: var(--fire);
+  }
+
+  /* Admin: add member */
+  .members-admin-bar {
+    margin-top: 40px; padding-top: 32px;
+    border-top: 1px solid #ddd;
+  }
+  .add-member-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto;
+    gap: 12px; align-items: start;
+  }
+  @media (max-width: 768px) {
+    .add-member-form { grid-template-columns: 1fr; }
+    #members { padding: 80px 24px; }
+    .members-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+  }
+
   /* ── YOUTUBE EMBED CARDS ─────────────────────────────────────────── */
   .video-thumb-img {
     width: 100%; aspect-ratio: 16/9;
@@ -1136,8 +1330,10 @@
   </a>
   <ul class="nav-links">
     <li><a href="#about">O nás</a></li>
+    <li><a href="#members">Členové</a></li>
     <li><a href="#videos">Videa</a></li>
     <li><a href="#gallery">Galerie</a></li>
+    <li><a href="#contact">Kontakt</a></li>
     <li><a href="https://www.instagram.com/rakettaci_/" target="_blank">Instagram</a></li>
   </ul>
 </nav>
@@ -1264,6 +1460,83 @@
       <div class="photo-grid" id="photo-grid">
         <div class="gallery-empty" id="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>
       </div>
+
+      <!-- Admin: Contact messages -->
+      <div class="admin-messages-panel" id="admin-messages-section" style="display:none">
+        <div class="admin-messages-title">📩 ZPRÁVY OD FANOUŠKŮ</div>
+        <div class="admin-msg-list" id="admin-msg-list">
+          <div class="admin-msg-empty">Načítám...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBERS -->
+<div id="members">
+  <div class="members-inner">
+    <p class="section-label reveal">Naše parta</p>
+    <h2 class="section-title reveal">RAKEŤÁCI<br><span style="color:var(--fire)">ČLENOVÉ</span></h2>
+
+    <div class="members-grid stagger" id="members-grid">
+      <!-- Rendered by JS -->
+    </div>
+
+    <!-- Admin: add member (only when logged in) -->
+    <div class="members-admin-bar" id="members-admin-bar" style="display:none">
+      <p style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:4px; text-transform:uppercase; color:var(--fire); margin-bottom:16px;">➕ Přidat člena</p>
+      <div class="add-member-form">
+        <input class="contact-input" id="member-name-input" placeholder="Jméno (např. Honza)">
+        <input class="contact-input" id="member-role-input" placeholder="Role (např. Kapitán)">
+        <button class="btn-primary" onclick="addMember()" style="border:none;cursor:pointer;white-space:nowrap;font-size:12px;letter-spacing:3px;padding:16px 24px;">Přidat →</button>
+      </div>
+      <div style="margin-top:12px;">
+        <input class="contact-input" id="member-photo-input" placeholder="URL fotky (volitelné — jinak emoji 🏍️)">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CONTACT -->
+<div id="contact">
+  <div class="contact-inner">
+    <div>
+      <p class="section-label reveal">Napište nám</p>
+      <h2 class="section-title reveal">KONTAKTUJ<br><span style="color:var(--fire)">NÁS</span></h2>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">📧</div>
+        <div>
+          <div class="contact-info-label">E-mail</div>
+          <div class="contact-info-value">rakettaci@gmail.com</div>
+        </div>
+      </div>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        </div>
+        <div>
+          <div class="contact-info-label">Instagram</div>
+          <div class="contact-info-value">@rakettaci_</div>
+        </div>
+      </div>
+      <div class="contact-info-item reveal">
+        <div class="contact-info-icon">▶</div>
+        <div>
+          <div class="contact-info-label">YouTube</div>
+          <div class="contact-info-value">@rakettaci</div>
+        </div>
+      </div>
+    </div>
+    <div class="reveal-right">
+      <div class="contact-form-wrap">
+        <input class="contact-input" id="contact-name" placeholder="Vaše jméno">
+        <input class="contact-input" id="contact-email" placeholder="E-mail (volitelné)">
+        <textarea class="contact-textarea" id="contact-message" placeholder="Vaše zpráva..."></textarea>
+        <div class="contact-success" id="contact-success">✓ Zpráva odeslána! Ozveme se vám.</div>
+        <button class="btn-primary" onclick="sendContactMessage()" id="contact-btn" style="border:none;cursor:pointer;font-size:13px;letter-spacing:3px;padding:16px 32px;">
+          Odeslat zprávu →
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -1284,7 +1557,9 @@
   <div class="footer-links">
     <a href="https://www.youtube.com/@rakettaci" target="_blank">YouTube</a>
     <a href="https://www.instagram.com/rakettaci_/" target="_blank">Instagram</a>
+    <a href="#members">Členové</a>
     <a href="#gallery">Galerie</a>
+    <a href="#contact">Kontakt</a>
     <a href="#about">O nás</a>
   </div>
   <div class="footer-copy">© 2026 Rakeťáci – Všechna práva vyhrazena. Babetta je životní styl. 🔥</div>
@@ -1402,7 +1677,7 @@ document.getElementById('video-modal').addEventListener('click', e => {
 // ---- FIREBASE ----
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 // Cloudinary used for storage instead of Firebase Storage
 
 const firebaseConfig = {
@@ -1429,6 +1704,10 @@ onAuthStateChanged(auth, user => {
   } else {
     document.getElementById('gallery-login').style.display = 'flex';
     document.getElementById('gallery-content').classList.remove('visible');
+    document.getElementById('members-admin-bar').style.display = 'none';
+    const msgSection = document.getElementById('admin-messages-section');
+    if (msgSection) msgSection.style.display = 'none';
+    document.querySelectorAll('.member-delete-btn').forEach(btn => btn.style.display = 'none');
   }
 });
 
@@ -1464,8 +1743,11 @@ window.doLogout = doLogout;
 function showGallery() {
   document.getElementById('gallery-login').style.display = 'none';
   document.getElementById('gallery-content').classList.add('visible');
+  document.getElementById('members-admin-bar').style.display = 'block';
+  document.getElementById('admin-messages-section') && (document.getElementById('admin-messages-section').style.display = 'block');
   loadPhotos();
   loadStorageUsage();
+  loadAdminMessages();
 }
 
 // ---- GALLERY PHOTOS (Firestore + Storage) ----
@@ -1605,25 +1887,183 @@ document.getElementById('lightbox').addEventListener('click', e => {
 // ---- CLOUDINARY STORAGE USAGE ----
 async function loadStorageUsage() {
   try {
-    // Cloudinary usage API (unsigned, public info)
-    const res = await fetch(`https://api.cloudinary.com/v1_1/dzenlym4o/usage`);
-    if (!res.ok) throw new Error();
-    const data = await res.json();
-    const usedMB = (data.storage?.usage / 1024 / 1024).toFixed(0);
-    const limitMB = (data.storage?.limit / 1024 / 1024).toFixed(0);
-    const pct = Math.min(100, (data.storage.usage / data.storage.limit) * 100).toFixed(1);
-    document.getElementById('storage-text').textContent = `${usedMB} MB / ${limitMB} MB (${pct}%)`;
-    document.getElementById('storage-bar-fill').style.width = pct + '%';
-    document.getElementById('storage-bar-wrap').style.display = 'block';
-  } catch {
-    // Cloudinary usage API requires auth — show estimated count instead
+    // Cloudinary usage API requires authentication — it's not accessible client-side without an API key.
+    // Instead, we count photos and estimate based on average image size (~1.5MB each).
     const q2 = await getDocs(collection(db, 'photos'));
     const count = q2.size;
-    document.getElementById('storage-text').textContent = `${count} fotek nahráno`;
-    document.getElementById('storage-bar-fill').style.width = Math.min(100, count * 2) + '%';
+    const estimatedMB = count * 1.5;
+    const FREE_LIMIT_MB = 25 * 1024; // 25 GB free tier in MB
+    const pct = Math.min(100, (estimatedMB / FREE_LIMIT_MB) * 100).toFixed(2);
+    document.getElementById('storage-text').textContent = `${count} fotek (odhad ~${estimatedMB.toFixed(0)} MB / 25 600 MB)`;
+    document.getElementById('storage-bar-fill').style.width = pct + '%';
+    document.getElementById('storage-bar-wrap').style.display = 'block';
+  } catch(e) {
+    document.getElementById('storage-text').textContent = 'Nelze načíst';
     document.getElementById('storage-bar-wrap').style.display = 'block';
   }
 }
+
+// ---- CONTACT FORM ----
+async function sendContactMessage() {
+  const name = document.getElementById('contact-name').value.trim();
+  const email = document.getElementById('contact-email').value.trim();
+  const message = document.getElementById('contact-message').value.trim();
+  const btn = document.getElementById('contact-btn');
+  const success = document.getElementById('contact-success');
+
+  if (!name || !message) { alert('Vyplňte prosím jméno a zprávu.'); return; }
+
+  btn.textContent = 'Odesílám...';
+  btn.disabled = true;
+
+  try {
+    await addDoc(collection(db, 'contact_messages'), {
+      name, email, message,
+      createdAt: serverTimestamp()
+    });
+    success.classList.add('show');
+    document.getElementById('contact-name').value = '';
+    document.getElementById('contact-email').value = '';
+    document.getElementById('contact-message').value = '';
+    setTimeout(() => success.classList.remove('show'), 5000);
+  } catch(e) {
+    alert('Chyba při odesílání zprávy. Zkuste to znovu.');
+    console.error(e);
+  } finally {
+    btn.textContent = 'Odeslat zprávu →';
+    btn.disabled = false;
+  }
+}
+window.sendContactMessage = sendContactMessage;
+
+// ---- ADMIN: CONTACT MESSAGES ----
+async function loadAdminMessages() {
+  const section = document.getElementById('admin-messages-section');
+  if (!section) return;
+  section.style.display = 'block';
+  const list = document.getElementById('admin-msg-list');
+  list.innerHTML = '<div class="admin-msg-empty">Načítám zprávy...</div>';
+
+  try {
+    const q = query(collection(db, 'contact_messages'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    const msgs = [];
+    snap.forEach(d => msgs.push({ id: d.id, ...d.data() }));
+
+    if (msgs.length === 0) {
+      list.innerHTML = '<div class="admin-msg-empty">Žádné zprávy zatím.</div>';
+      return;
+    }
+
+    list.innerHTML = msgs.map(m => {
+      const date = m.createdAt?.toDate ? m.createdAt.toDate().toLocaleString('cs-CZ') : '—';
+      return `
+        <div class="admin-msg-card">
+          <div class="admin-msg-meta">
+            <span class="admin-msg-name">${m.name}</span>
+            ${m.email ? `<span class="admin-msg-email">${m.email}</span>` : ''}
+            <span class="admin-msg-time">${date}</span>
+          </div>
+          <div class="admin-msg-text">${m.message}</div>
+          <button class="admin-msg-delete" onclick="deleteMessage('${m.id}')" title="Smazat">✕</button>
+        </div>`;
+    }).join('');
+  } catch(e) {
+    list.innerHTML = '<div class="admin-msg-empty">Chyba při načítání zpráv.</div>';
+    console.error(e);
+  }
+}
+
+async function deleteMessage(docId) {
+  if (!confirm('Smazat tuto zprávu?')) return;
+  try {
+    await deleteDoc(doc(db, 'contact_messages', docId));
+    loadAdminMessages();
+  } catch(e) {
+    alert('Chyba při mazání.');
+  }
+}
+window.deleteMessage = deleteMessage;
+
+// ---- MEMBERS ----
+async function loadMembers() {
+  const grid = document.getElementById('members-grid');
+  try {
+    const q = query(collection(db, 'members'), orderBy('createdAt', 'asc'));
+    const snap = await getDocs(q);
+    const members = [];
+    snap.forEach(d => members.push({ id: d.id, ...d.data() }));
+    renderMembers(members);
+  } catch(e) {
+    // Firestore might not have the collection yet — show placeholder
+    renderMembers([]);
+  }
+}
+
+function renderMembers(members) {
+  const grid = document.getElementById('members-grid');
+  if (!members || members.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#bbb;">Zatím žádní členové. Admin může přidat.</div>`;
+    return;
+  }
+  grid.innerHTML = members.map(m => `
+    <div class="member-card reveal-scale" data-id="${m.id}">
+      <div class="member-photo-wrap">
+        ${m.photoUrl
+          ? `<img src="${m.photoUrl}" alt="${m.name}" onerror="this.parentNode.innerHTML='<div class=member-photo-placeholder>🏍️</div>'">`
+          : `<div class="member-photo-placeholder">🏍️</div>`
+        }
+      </div>
+      <div class="member-name">${m.name}</div>
+      ${m.role ? `<div class="member-role">${m.role}</div>` : ''}
+      <button class="admin-msg-delete member-delete-btn" onclick="deleteMember('${m.id}')" title="Smazat" style="display:none">✕</button>
+    </div>
+  `).join('');
+  document.querySelectorAll('.reveal-scale').forEach(r => io.observe(r));
+  // Show delete buttons only for admin
+  onAuthStateChanged(auth, user => {
+    document.querySelectorAll('.member-delete-btn').forEach(btn => {
+      btn.style.display = user ? 'block' : 'none';
+    });
+  });
+}
+
+async function addMember() {
+  const name = document.getElementById('member-name-input').value.trim();
+  const role = document.getElementById('member-role-input').value.trim();
+  const photoUrl = document.getElementById('member-photo-input').value.trim();
+  if (!name) { alert('Zadejte jméno člena.'); return; }
+  try {
+    await addDoc(collection(db, 'members'), {
+      name, role, photoUrl,
+      createdAt: serverTimestamp()
+    });
+    document.getElementById('member-name-input').value = '';
+    document.getElementById('member-role-input').value = '';
+    document.getElementById('member-photo-input').value = '';
+    loadMembers();
+  } catch(e) {
+    alert('Chyba při přidávání člena.');
+    console.error(e);
+  }
+}
+window.addMember = addMember;
+
+async function deleteMember(docId) {
+  if (!confirm('Odebrat tohoto člena?')) return;
+  try {
+    await deleteDoc(doc(db, 'members', docId));
+    loadMembers();
+  } catch(e) {
+    alert('Chyba při mazání.');
+  }
+}
+window.deleteMember = deleteMember;
+
+// Load members on page start (public)
+loadMembers();
+
+
 
 // Allow Enter key on login
 document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
