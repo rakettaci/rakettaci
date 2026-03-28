@@ -22,6 +22,8 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  html, body { overflow-x: hidden; max-width: 100%; }
+
   ::selection { background: var(--fire); color: var(--white); }
 
   html { scroll-behavior: smooth; }
@@ -29,7 +31,6 @@
   body {
     font-family: 'Barlow', sans-serif;
     font-weight: 300;
-    overflow-x: hidden;
   }
 
   
@@ -147,8 +148,7 @@
     position: absolute;
     bottom: 0; left: 50%;
     transform: translateX(-50%);
-    width: 300px; height: 400px;
-    opacity: 0.08;
+    width: min(300px, 80vw); height: 400px;
     background: radial-gradient(ellipse at bottom, var(--fire2), var(--fire), transparent 70%);
     filter: blur(40px);
     opacity: 0.05;
@@ -980,6 +980,10 @@
 
   /* ---- RESPONSIVE ---- */
   @media (max-width: 768px) {
+    /* Catch-all: nothing wider than screen */
+    *, *::before, *::after { max-width: 100%; }
+    img, iframe, video, embed { max-width: 100% !important; }
+
     /* Navbar */
     nav { padding: 14px 20px; }
     .nav-links { display: none; }
