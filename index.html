@@ -1,0 +1,1364 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rakettáči – Babeťáci</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --fire: #e63b1e;
+    --fire2: #ff6a00;
+    --black: #0a0a0a;
+    --dark: #111111;
+    --dark2: #1a1a1a;
+    --smoke: #2a2a2a;
+    --ash: #888;
+    --white: #f0ece4;
+    --cream: #c9bfa8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  ::selection { background: var(--fire); color: var(--white); }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-weight: 300;
+    overflow-x: hidden;
+    cursor: default;
+  }
+
+  /* ---- CUSTOM CURSOR ---- */
+  body { cursor: none; }
+  #cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--fire);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  #cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid var(--fire);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transition: all 0.2s ease;
+    opacity: 0.5;
+  }
+
+  /* ---- NOISE OVERLAY ---- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: 9990;
+  }
+
+  /* ---- NAVBAR ---- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 48px;
+    background: linear-gradient(to bottom, rgba(10,10,10,0.95), transparent);
+    backdrop-filter: blur(2px);
+  }
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    height: 44px;
+    filter: drop-shadow(0 0 12px var(--fire));
+  }
+  .nav-logo-text {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    color: var(--white);
+    line-height: 1;
+  }
+  .nav-logo-text span { color: var(--fire); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cream);
+    text-decoration: none;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: 0; right: 0;
+    height: 1px;
+    background: var(--fire);
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { transform: scaleX(1); }
+
+  .btn-admin-nav {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fire) !important;
+    border: 1px solid var(--fire);
+    padding: 8px 18px;
+    text-decoration: none;
+    transition: all 0.25s;
+  }
+  .btn-admin-nav:hover {
+    background: var(--fire);
+    color: var(--black) !important;
+  }
+  .btn-admin-nav::after { display: none !important; }
+
+  /* ---- HERO ---- */
+  #hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    padding: 120px 24px 80px;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 100%, rgba(230,59,30,0.18) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 30% at 50% 80%, rgba(255,106,0,0.1) 0%, transparent 60%),
+      var(--black);
+  }
+
+  .hero-flames {
+    position: absolute;
+    bottom: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 300px; height: 400px;
+    opacity: 0.08;
+    background: radial-gradient(ellipse at bottom, var(--fire2), var(--fire), transparent 70%);
+    filter: blur(40px);
+    animation: flamePulse 3s ease-in-out infinite;
+  }
+
+  @keyframes flamePulse {
+    0%, 100% { transform: translateX(-50%) scaleY(1); opacity: 0.08; }
+    50% { transform: translateX(-50%) scaleY(1.2); opacity: 0.14; }
+  }
+
+  .hero-eyebrow {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.2s forwards;
+  }
+
+  .hero-logo-img {
+    width: 140px;
+    filter: drop-shadow(0 0 40px rgba(230,59,30,0.6));
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.4s forwards, floatLogo 4s 1.2s ease-in-out infinite;
+    margin-bottom: 32px;
+  }
+
+  @keyframes floatLogo {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 14vw, 180px);
+    line-height: 0.9;
+    letter-spacing: 6px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.6s forwards;
+  }
+  .hero-title span { color: var(--fire); }
+
+  .hero-sub {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 18px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--cream);
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 0.8s forwards;
+  }
+
+  .hero-divider {
+    width: 80px; height: 2px;
+    background: linear-gradient(to right, transparent, var(--fire), transparent);
+    margin: 40px auto;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 1s forwards;
+  }
+
+  .hero-cta {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+    position: relative;
+    z-index: 1;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.1s forwards;
+  }
+
+  .btn-primary {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: var(--fire);
+    color: var(--black);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: all 0.25s;
+    border: 2px solid var(--fire);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-primary:hover {
+    background: transparent;
+    color: var(--fire);
+    box-shadow: 0 0 30px rgba(230,59,30,0.3);
+  }
+
+  .btn-ghost {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    background: transparent;
+    color: var(--white);
+    padding: 16px 36px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.25s;
+    border: 1px solid rgba(255,255,255,0.2);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-ghost:hover {
+    border-color: var(--fire);
+    color: var(--fire);
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---- SCROLL INDICATOR ---- */
+  .scroll-hint {
+    position: absolute;
+    bottom: 40px; left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+    animation: fadeUp 0.8s 1.5s forwards;
+    z-index: 1;
+  }
+  .scroll-hint span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+  .scroll-arrow {
+    width: 20px; height: 30px;
+    border: 1px solid var(--ash);
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    padding-top: 6px;
+  }
+  .scroll-dot {
+    width: 4px; height: 4px;
+    background: var(--fire);
+    border-radius: 50%;
+    animation: scrollDot 1.5s ease-in-out infinite;
+  }
+  @keyframes scrollDot {
+    0% { transform: translateY(0); opacity: 1; }
+    100% { transform: translateY(12px); opacity: 0; }
+  }
+
+  /* ---- SECTIONS ---- */
+  section {
+    padding: 100px 48px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .section-full { max-width: 100%; padding: 100px 0; }
+
+  .section-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: var(--fire);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: var(--fire);
+  }
+
+  .section-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 6vw, 80px);
+    letter-spacing: 4px;
+    line-height: 1;
+    margin-bottom: 48px;
+  }
+
+  /* ---- ABOUT ---- */
+  #about {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+  }
+
+  .about-text p {
+    font-size: 17px;
+    line-height: 1.8;
+    color: var(--cream);
+    margin-bottom: 20px;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px;
+  }
+
+  .stat-box {
+    background: var(--dark2);
+    padding: 36px 28px;
+    border-top: 2px solid transparent;
+    transition: border-color 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .stat-box::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(230,59,30,0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .stat-box:hover { border-color: var(--fire); }
+  .stat-box:hover::before { opacity: 1; }
+
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px;
+    color: var(--fire);
+    line-height: 1;
+  }
+  .stat-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ash);
+    margin-top: 8px;
+  }
+
+  /* ---- YOUTUBE ---- */
+  #videos {
+    background: var(--dark);
+    padding: 100px 48px;
+  }
+
+  .videos-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .videos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 2px;
+  }
+
+  .video-card {
+    position: relative;
+    background: var(--dark2);
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .video-thumb {
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: var(--smoke);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-thumb iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+    pointer-events: none;
+  }
+
+  .video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,10,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+  }
+
+  .video-card:hover .video-overlay { background: rgba(10,10,10,0.2); }
+
+  .play-btn {
+    width: 60px; height: 60px;
+    background: var(--fire);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .video-card:hover .play-btn {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(230,59,30,0.5);
+  }
+
+  .play-btn svg { fill: white; margin-left: 4px; }
+
+  .video-info {
+    padding: 20px;
+  }
+
+  .video-info h3 {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 16px;
+    letter-spacing: 1px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .video-info a {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--fire);
+    text-decoration: none;
+  }
+
+  /* ---- VIDEO MODAL ---- */
+  #video-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(6px);
+  }
+  #video-modal.open { display: flex; }
+
+  .modal-inner {
+    width: 90%;
+    max-width: 900px;
+    position: relative;
+  }
+
+  .modal-inner iframe {
+    width: 100%;
+    aspect-ratio: 16/9;
+    border: none;
+  }
+
+  .modal-close {
+    position: absolute;
+    top: -50px; right: 0;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 32px;
+    cursor: none;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: color 0.2s;
+  }
+  .modal-close:hover { color: var(--fire); }
+
+  /* ---- GALLERY (ADMIN) ---- */
+  #gallery {
+    background: var(--black);
+    padding: 100px 48px;
+    position: relative;
+  }
+
+  .gallery-inner { max-width: 1200px; margin: 0 auto; }
+
+  /* Login wall */
+  #gallery-login {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 380px;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .lock-icon {
+    width: 80px; height: 80px;
+    border: 2px solid var(--smoke);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ash);
+    font-size: 32px;
+    position: relative;
+    animation: lockPulse 3s ease-in-out infinite;
+  }
+  @keyframes lockPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(230,59,30,0); }
+    50% { box-shadow: 0 0 0 20px rgba(230,59,30,0); }
+  }
+
+  .login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    width: 100%;
+    max-width: 360px;
+  }
+
+  .login-form input {
+    background: var(--dark2);
+    border: 1px solid var(--smoke);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px;
+    padding: 16px 20px;
+    outline: none;
+    transition: border-color 0.25s;
+    width: 100%;
+  }
+  .login-form input:focus { border-color: var(--fire); }
+  .login-form input::placeholder { color: var(--ash); }
+
+  .login-error {
+    color: var(--fire);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: none;
+  }
+  .login-error.show { display: block; }
+
+  /* Gallery grid */
+  #gallery-content { display: none; }
+  #gallery-content.visible { display: block; }
+
+  .gallery-admin-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--smoke);
+  }
+
+  .admin-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fire);
+  }
+  .admin-dot {
+    width: 8px; height: 8px;
+    background: var(--fire);
+    border-radius: 50%;
+    animation: blink 1s infinite;
+  }
+  @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+  .btn-logout {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: none;
+    border: 1px solid var(--smoke);
+    color: var(--ash);
+    padding: 8px 18px;
+    cursor: none;
+    transition: all 0.2s;
+  }
+  .btn-logout:hover { border-color: var(--fire); color: var(--fire); }
+
+  /* Upload area */
+  .gallery-upload {
+    border: 2px dashed var(--smoke);
+    padding: 40px;
+    text-align: center;
+    margin-bottom: 32px;
+    transition: border-color 0.3s;
+    position: relative;
+  }
+  .gallery-upload:hover, .gallery-upload.dragover { border-color: var(--fire); }
+  .gallery-upload input[type="file"] {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    cursor: pointer;
+    width: 100%;
+  }
+  .upload-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ash);
+  }
+  .upload-label span { color: var(--fire); }
+
+  /* Photo grid */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 3px;
+  }
+
+  .photo-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: var(--dark2);
+  }
+
+  .photo-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+  .photo-item:hover img { transform: scale(1.06); }
+
+  .photo-delete {
+    position: absolute;
+    top: 10px; right: 10px;
+    background: rgba(230,59,30,0.9);
+    border: none;
+    color: white;
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .photo-item:hover .photo-delete { opacity: 1; }
+
+  .photo-lightbox {
+    position: absolute;
+    inset: 0;
+    background: rgba(10,10,10,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s;
+    cursor: pointer;
+  }
+  .photo-item:hover .photo-lightbox { opacity: 1; }
+  .photo-lightbox svg { color: white; }
+
+  .gallery-empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 80px;
+    color: var(--ash);
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+
+  /* Lightbox */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.95);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  #lightbox.open { display: flex; }
+  #lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 1px solid var(--smoke);
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 24px; right: 32px;
+    background: none;
+    border: none;
+    color: var(--white);
+    font-size: 40px;
+    cursor: none;
+    transition: color 0.2s;
+    line-height: 1;
+  }
+  .lightbox-close:hover { color: var(--fire); }
+
+  /* ---- INSTAGRAM ---- */
+  .instagram-bar {
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    padding: 60px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .instagram-bar::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+  }
+  .instagram-bar > * { position: relative; z-index: 1; }
+
+  .ig-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px;
+    letter-spacing: 8px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 12px;
+  }
+  .ig-handle {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 72px);
+    letter-spacing: 4px;
+    margin-bottom: 28px;
+  }
+  .btn-instagram {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: white;
+    color: #1a1a1a;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 16px 36px;
+    text-decoration: none;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .btn-instagram:hover { opacity: 0.9; transform: scale(1.02); }
+
+  /* ---- FOOTER ---- */
+  footer {
+    background: var(--dark);
+    padding: 60px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--smoke);
+    flex-wrap: wrap;
+    gap: 32px;
+  }
+
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px;
+    letter-spacing: 4px;
+  }
+  .footer-logo span { color: var(--fire); }
+
+  .footer-links {
+    display: flex;
+    gap: 32px;
+    flex-wrap: wrap;
+  }
+  .footer-links a {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--ash);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--fire); }
+
+  .footer-copy {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px;
+    color: var(--ash);
+    letter-spacing: 2px;
+    width: 100%;
+    text-align: center;
+    padding-top: 32px;
+    border-top: 1px solid var(--smoke);
+    margin-top: 16px;
+  }
+
+  /* ---- ADMIN MODAL ---- */
+  #admin-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 5000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+  }
+  #admin-modal.open { display: flex; }
+
+  .admin-modal-box {
+    background: var(--dark2);
+    border: 1px solid var(--smoke);
+    padding: 48px;
+    width: 100%;
+    max-width: 400px;
+    position: relative;
+  }
+  .admin-modal-box .section-title { font-size: 48px; margin-bottom: 8px; }
+
+  .admin-modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: none; border: none;
+    color: var(--ash); font-size: 24px; cursor: none;
+    transition: color 0.2s;
+  }
+  .admin-modal-close:hover { color: var(--fire); }
+
+  /* ---- RESPONSIVE ---- */
+  @media (max-width: 768px) {
+    nav { padding: 16px 24px; }
+    .nav-links { display: none; }
+    section { padding: 80px 24px; }
+    #about { grid-template-columns: 1fr; gap: 48px; }
+    #videos, #gallery, .instagram-bar { padding: 80px 24px; }
+    footer { padding: 48px 24px; }
+    .hero-cta { flex-direction: column; align-items: center; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ---- REVEAL ANIMATIONS ---- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<div id="cursor"></div>
+<div id="cursor-ring"></div>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCACWAJYDASIAAhEBAxEB/8QAHAABAAMBAQEBAQAAAAAAAAAAAAYHCAUJAgME/8QASRAAAAUCAwQECgcFBQkAAAAAAAECAwQFBgcREggTFCEiMTJRCRUjQVJhcYGRkjNCQ2JyscIWU1RjoRckNIKzRHODhJOio+Hw/8QAGQEBAQADAQAAAAAAAAAAAAAAAAQCBQYH/8QAKREBAAECBAQFBQAAAAAAAAAAAAECAwQFESEGEhMUIjFBUYEyYXGhwf/aAAwDAQACEQMRAD8A2WAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAqu7NoHCS1q7NoVau1DFQgr3UhpEN93Qr0dSUGWZefmIpUtrTCBqI6qHVqhIeJB7tBU13mrzdrIBf4DKmGm11Gq0GXUbxtF2mU2DuWX6hT3DkJ4h3VoTuzIlJSom3DLmrsZC88NMVrBxFS7+yVwx5z7KdTsZSVNPILv3ayI9PrLMvWAnAAAAACE43XsjDzC6uXZukuPQ2Mozaupb61Ehsj9WpRGfqIwEwbeacccQ26hamlaXCSoj0HkR5H3HkZHz7x+wzlsEXC5cGGdwyJ8riaw5cL8me4r6RxTrbZktXt0qL/KNGgAAKuxGx6wtsOpu0quXGlVTa+kiQ2VvuIPuVpLSlXqMyMBaIDJ9y7Xniq9afTTs5cSgvuR5J1CU4annILiNW9SynsqMjzLNR8ushOou1hgq9lvLgmsf7ymPfpSYC9gEAw7xgw5xBqr1JtG42qlNYY37jPDutK0ZkRqLeJTnkaizy7xPwAAAAAAAZmxI2d8O2b+qOJN1Xr4uivz+PkRpyWeGM1KzU2evtJVzLLr7hASsDDau0l6m2LZN83Ybsbcs1NinMQIme6bRr4h9Cefkkr6u1q9NWepqlhrZlSv1N8VOiR51aRGRGadleVbaSlRqI0Nq6KV8+0RZ/wBc5jkAxjgvsqV9dFrtJxIlu0umT9w40xTJjS3VPNa9K1noUWkidVkRH7fMKIu6nVnAbHtyLTKk69Joctp+PI7G/ZWlK8lF95CtKi9o9RR57eEHgrh46sS/qzaKw58FON/pAegUJ9uTEZktfRutpcT7FFmX5j9xGsLZpVLDK16in/aaPEd+ZlBjqXNVY9Ct2pVuX/hqfEdlPfhbQaj/AKEArG68ZqZSdoG28LmHIxnMS4VTecP6FxTeqO0nn2lH15l1KR38uHt3pz2eqgXfPif6gx8pudc8eTcc6UpFcqMxVROUXaQ5rzTkfWRF5suoSS/8Wr/xQt2n2HcDENpqmyEu1CYznrlGjMkGrzdSs8k9Z8+Qjpxtqrn3+l0t/hbH2O3nk160RMaff0n43feAd6/2SYnUmpajboFcabh1VBn0W+rJ7/Io9XsNZD0TI9RDzHviGmRbUhJfY5LR7v8A0N47M1xO3TgRadYfWS5HAlHeV6SmVKZMz9Z7vMYZdie4s6+yrjXJacpzCKKI8NURP8n9w/r2g7ol2Xg1c9yU9e7mxoemM56DjiktoV7jXn7hhDZewiZxkvGqFXKrMjU2nspfluM5G88txR6U6lZ5Z5KM1GR9Q1xt1TOF2c6wz/Fy4rH/AJkr/JArvwa8Bbdr3jU/qvzYzH/TbWo/9Uhe5BGsVdmC81YiMTaXDkXNaURiNGZYTUmGJ/DstIRu81oSjVyPJWR8uvmOqq0cFWp24uqj3JYUt51W78f0ZnhdalPq6L6EG1pI3kdpRcmGi789kj8JUePLjuR5DLTzLidK23EkpKyPzGR8jIBR2z7gBa+G10PXdQrpl1riYJxW9W63ehakL1akdfYLIXwIlYeH1p2PMrEi1qSillVn0vyWWVGTOpJGRaG+yguZ8kkX5CWgAAAAAAAAAAAw34SWNle1pS/3tOea+V3P9Y3IMheEphIVQbNqenpNS5LGf4kNq/QAvnZqf4jASyF91Gjo+VOn9I6mNMKRUsIbwp8RKlPyKHMbaSnrUo2V5EXtET2PpKJezlaDhKzNEZ1r5H3Ei3AHlbb120yJQGWJRucQyjToJPb7uY7loSOPpa55I0uSHVrX8eRe4iIXPtK7K896qy7rwxjNOtvKNyTRSySaFedTGfLSfocsvq9xUBQbQxbpc3xbEsa594tf0K6Q91/Ly+I1GKyumqirpeczru9GyLjy7YxFmMdGtu3TpGkb+m/502+XRv2Zw9AcYT9NJUTaE/n/APesb42brUm2VgnbVvVNG7nsRlOyW/QcdWpw0n6069J+shSmzhs81tuvxL6xSQ2UuHkum0joq3S/M47p5Zl1knnz5mfLIavFWAwvbWuSfNoeLc/jPMfN+iJimI0jX2Zs8IhIJnA+nted+usF8GnlB4O6OTOB89/zv119XwaZSOP4SKSlOHtsQvrO1ZbvyMqL9Yn+xDAKHs4W879aW5KfV75DifySQtcuu0AAAAAAAAAAAAAAAABnTwglI8YYFJqBJ6VLq0d81dyVEto/6uJGixwb9tmn3lZlVteqoziVKMphZl1oz7Ki9aTyUXrIBm3wdN1tTLJrlmvSCOVT5vGsNn17h1KUq0+olp5/jGsB5esIv7Z9xlLdMG3VoSzQ35M1sVGOrly9NC/VzI+5SRr2nbSbX93iVWx6r40ef4QmKZKak63ko1P6NWjoNdS1n0Un51aTMgpfbUxIv1ONK7LoVbqlOhQmo/Dxqa840uQ66hKs1aOa1Zq0kXw5mKbduHGNui02p/tZeJxKouQiJoq76jd3Gne9Al5lp1FnmQv69bjw+unF2fdVv0W5b3rXE02a21SorbbVOcip7DktWstCz7WgtPQ5LHIhSuVNgFhG+s6adQ3CIl8w3pRcc3u3/J6T1dHs9EBYGwFiFdd1065KFcVWk1Zml8O7EkSnVOPJ3m8JSDWrmpPQIyz6ufu1UMf4E3nh5h5XK8VMpVzRK1Kg0+IVsTKe1HnOKYSpCnEL1JQ8terWaegpR9klCQXxtQTTtSXLs20V8Xwq32nKjISWjQel7yaM9TjJmlS2zUkySermkBUHhCLsarOLFPtyLI3jVCg6XvuSHT1rL5CaGxMAKP4hwVs6mGjStujx1OJ/mLRrX/3KMYO2dsNK7jRimdWrfESKQ1L4ytz3PtlGrWbWfpuH3dRZn3D0pbQhtCUISSUp5ElPUQD7AAAAAAAAAAAAAAAAAAABHr0s627ygtRLkpTM1LDm9jrzNLsdwupbbiclIV60mQw9ihTbOpt93HQqDLqcazrYjNx67KOVvX5atfk6bHUfYSpzVn+F1atW7G+qi/wsCTJ06t00pzL2EZjyzu6bJVhBQ3nHDU5Xa9UajNX+8dbSyhHw3jp/8QwHHvC96rcDBUxrc0qgsHnFo8HNEVn16ftF97i81H3iKj5ABPbXvjfRGLbvjf1q3ey2oz1S6Z/MiuK5py6zaz3a+rIjyUWiNn21bWuq+KvZ9/SJtQrsQm6jFlxagtmNWYpt6USOjkpS1NOc1aumhfT6STGOhpDAipvx72wSrORnJ4qfQ1/fYJfR+HFK+UBva36LSrfpLFKolOi06BHTpaYjtkhCPcX9T6zHSAgAAAAAAAAAAAAAAAAAAAAAfK0kpCkq5pMebWI9jyqXDuvDzdH4ztSqP1imt/xVNeQjfKR36EtsOeze+gPScVTjzhI1iC3Ar1EqZ0G8qL5Sl1Rsvfu3O9Bn7csz5GRmRh5egL1xNw5Yp9Sc/bagz7AqhH5SbDgql0SX99G76TGfop1l91HUIMVi0BsiekYpWiUfP7Fuc678nDl+ZAIXFjyJcpqJGZcfeecJtDbadSlqM8iIiLmZmfUQ1ps4We7PxttqiNlvoGHVOcdqj7fY8ZSFLUtrV9xStH/LqEawhwsuCpvknDaiVNhx3oPXnXo3DJjNq7XBMcz3mX2mald276xszB/Dq38M7OYt2goNX2smS4XlZTp9pa/yIvMXIBNQAAAAAAAAAAAAAAAAAAAAAAAAAB8OIQ4hSFoJSVdaT6jHOat6gsv8QzRqa2/+8TFbJXxyzHUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//9k=" alt="Rakettáči" id="nav-logo-img">
+    <div class="nav-logo-text">Rakett<span>áči</span></div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">O nás</a></li>
+    <li><a href="#videos">Videa</a></li>
+    <li><a href="#gallery">Galerie</a></li>
+    <li><a href="https://www.instagram.com/rakettaci_/" target="_blank">Instagram</a></li>
+    <li><a href="#gallery" class="btn-admin-nav" id="open-admin-btn">🔒 Admin</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div id="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-flames"></div>
+  <p class="hero-eyebrow">Parta babeťáků z Česka</p>
+  <img src="data:image/png;base64,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" alt="Logo" class="hero-logo-img" id="hero-logo-img">
+  <h1 class="hero-title">RAKETT<span>ÁČI</span></h1>
+  <p class="hero-sub">Život na dvou kolech &nbsp;·&nbsp; Volnost na silnici</p>
+  <div class="hero-divider"></div>
+  <div class="hero-cta">
+    <a href="https://www.youtube.com/@rakettaci" target="_blank" class="btn-primary">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8c-1.1-1.2-2.4-1.2-3-1.3C16.1 2.7 12 2.7 12 2.7s-4.1 0-6.8.2C4.6 3 3.3 3 2.2 4.2 1.3 5 1 7 1 7S.7 9.3.7 11.5v2.1C.7 15.8 1 18 1 18s.3 2 1.2 2.8C3.3 22 4.8 21.9 5.5 22c2.2.2 9.5.3 9.5.3s4.1 0 6.8-.3c.6-.1 1.9-.1 3-1.2C25.7 20 26 18 26 18s.3-2.3.3-4.4v-2.1C23.3 9.3 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
+      YouTube kanál
+    </a>
+    <a href="#gallery" class="btn-ghost">
+      📸 Galerie
+    </a>
+  </div>
+  <div class="scroll-hint">
+    <span>Scroll</span>
+    <div class="scroll-arrow"><div class="scroll-dot"></div></div>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-text reveal">
+    <p class="section-label">Kdo jsme</p>
+    <h2 class="section-title">PARTA<br>BABEŤÁKŮ</h2>
+    <p>Jsme skupina babeťáků, kteří milují svobodu na silnici. Babetta je pro nás víc než jen dopravní prostředek – je to životní styl, přátelství a nezapomenutelné zážitky.</p>
+    <p>Každá vyjížďka je dobrodružství. Každá silnice je příběh. Sledujte nás na YouTube a Instagramu!</p>
+    <br>
+    <a href="https://www.youtube.com/@rakettaci" target="_blank" class="btn-primary" style="margin-top:8px;">
+      Náš YouTube kanál →
+    </a>
+  </div>
+  <div class="about-stats reveal">
+    <div class="stat-box">
+      <div class="stat-num">∞</div>
+      <div class="stat-label">Km na silnicích</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">💥</div>
+      <div class="stat-label">Nezapomenutelných výletů</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Srdce skupiny</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-num">🔥</div>
+      <div class="stat-label">Vášeň pro Babettu</div>
+    </div>
+  </div>
+</section>
+
+<!-- VIDEOS -->
+<div id="videos" class="section-full">
+  <div class="videos-inner" style="padding: 0 48px;">
+    <p class="section-label reveal">Naše videa</p>
+    <h2 class="section-title reveal">YOUTUBE<br><span style="color:var(--fire)">KANÁL</span></h2>
+  </div>
+  <div class="videos-inner" style="padding: 0 48px;">
+    <div class="videos-grid" id="videos-grid">
+      <!-- Video cards rendered by JS -->
+    </div>
+    <div style="text-align:center; margin-top: 48px;" class="reveal">
+      <a href="https://www.youtube.com/@rakettaci" target="_blank" class="btn-primary">
+        Všechna videa na YouTube →
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- GALLERY -->
+<div id="gallery">
+  <div class="gallery-inner">
+    <p class="section-label reveal">Pouze pro členy</p>
+    <h2 class="section-title reveal">FOTO<br><span style="color:var(--fire)">GALERIE</span></h2>
+
+    <!-- Login wall -->
+    <div id="gallery-login">
+      <div class="lock-icon">🔒</div>
+      <p style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:3px; text-transform:uppercase; color:var(--ash);">Přihlaste se jako admin</p>
+      <div class="login-form">
+        <input type="text" id="login-user" placeholder="Uživatelské jméno" autocomplete="off">
+        <input type="password" id="login-pass" placeholder="Heslo">
+        <p class="login-error" id="login-error">❌ Špatné jméno nebo heslo</p>
+        <button class="btn-primary" onclick="doLogin()" style="border:none; font-size:13px; letter-spacing:3px; text-transform:uppercase; padding:16px; cursor:none;">
+          Přihlásit se →
+        </button>
+      </div>
+    </div>
+
+    <!-- Gallery content (admin only) -->
+    <div id="gallery-content">
+      <div class="gallery-admin-bar">
+        <div class="admin-badge">
+          <div class="admin-dot"></div>
+          Admin režim aktivní
+        </div>
+        <button class="btn-logout" onclick="doLogout()">Odhlásit</button>
+      </div>
+
+      <div class="gallery-upload" id="upload-area">
+        <input type="file" id="photo-input" accept="image/*" multiple onchange="handleFiles(this.files)">
+        <p class="upload-label">Přetáhněte sem fotky nebo <span>klikněte pro výběr</span></p>
+        <p style="font-size:12px; color:var(--ash); margin-top:8px; font-family:'Barlow Condensed',sans-serif; letter-spacing:2px;">JPG, PNG, WEBP – neomezený počet</p>
+      </div>
+
+      <div class="photo-grid" id="photo-grid">
+        <div class="gallery-empty" id="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INSTAGRAM -->
+<div class="instagram-bar reveal">
+  <p class="ig-label">Sledujte nás</p>
+  <h2 class="ig-handle">@rakettaci_</h2>
+  <a href="https://www.instagram.com/rakettaci_/" target="_blank" class="btn-instagram">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+    Sledovat na Instagramu
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Rakett<span>áči</span></div>
+  <div class="footer-links">
+    <a href="https://www.youtube.com/@rakettaci" target="_blank">YouTube</a>
+    <a href="https://www.instagram.com/rakettaci_/" target="_blank">Instagram</a>
+    <a href="#gallery">Galerie</a>
+    <a href="#about">O nás</a>
+  </div>
+  <div class="footer-copy">© 2025 Rakettáči – Všechna práva vyhrazena. Babetta je životní styl. 🔥</div>
+</footer>
+
+<!-- VIDEO MODAL -->
+<div id="video-modal">
+  <div class="modal-inner">
+    <button class="modal-close" onclick="closeVideoModal()">✕ Zavřít</button>
+    <iframe id="modal-iframe" src="" allowfullscreen></iframe>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button class="lightbox-close">✕</button>
+  <img id="lightbox-img" src="" alt="">
+</div>
+
+<script>
+// ---- CURSOR ----
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursor-ring');
+let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX; mouseY = e.clientY;
+  cursor.style.left = mouseX - 6 + 'px';
+  cursor.style.top = mouseY - 6 + 'px';
+});
+
+function animateRing() {
+  ringX += (mouseX - ringX - 18) * 0.12;
+  ringY += (mouseY - ringY - 18) * 0.12;
+  ring.style.left = ringX + 'px';
+  ring.style.top = ringY + 'px';
+  requestAnimationFrame(animateRing);
+}
+animateRing();
+
+document.querySelectorAll('a, button, input, .video-card, .photo-item').forEach(el => {
+  el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
+  el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
+});
+
+// ---- LOGO: load from file ----
+// Try to load the uploaded logo, fallback to SVG
+(function() {
+  const imgs = document.querySelectorAll('#nav-logo-img, #hero-logo-img');
+  // We'll use an inline SVG as fallback since the PNG is embedded at build time
+  // The logo.png should be placed in the same folder as index.html
+})();
+
+// ---- REVEAL ON SCROLL ----
+const reveals = document.querySelectorAll('.reveal');
+const io = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: 0.1 });
+reveals.forEach(r => io.observe(r));
+
+// ---- VIDEOS ----
+const YT_VIDEOS = [
+  { id: 'YOUR_VIDEO_ID_1', title: 'Výlet s Babettou #1' },
+  { id: 'YOUR_VIDEO_ID_2', title: 'Výlet s Babettou #2' },
+  { id: 'YOUR_VIDEO_ID_3', title: 'Výlet s Babettou #3' },
+];
+
+// Replace with real YouTube video IDs from @rakettaci channel
+// Example: https://www.youtube.com/watch?v=XXXXXXXXXXX → id = 'XXXXXXXXXXX'
+const REAL_VIDEOS = [
+  // ADD YOUR REAL VIDEO IDs HERE — format: { id: 'VIDEO_ID', title: 'Název videa' }
+  // Pro začátek zobrazíme kanál
+];
+
+function renderVideos() {
+  const grid = document.getElementById('videos-grid');
+  const videos = REAL_VIDEOS.length > 0 ? REAL_VIDEOS : [
+    { id: null, title: 'Přidejte ID vašich YouTube videí do kódu' }
+  ];
+
+  grid.innerHTML = videos.map((v, i) => {
+    if (!v.id) return `
+      <div class="video-card" style="min-height:200px; display:flex; align-items:center; justify-content:center; padding:40px; background:var(--dark2);">
+        <div style="text-align:center;">
+          <p style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:3px; text-transform:uppercase; color:var(--ash); margin-bottom:16px;">Kanál @rakettaci</p>
+          <a href="https://www.youtube.com/@rakettaci" target="_blank" class="btn-primary">Navštívit YouTube →</a>
+        </div>
+      </div>`;
+    return `
+      <div class="video-card reveal" onclick="openVideo('${v.id}')">
+        <div class="video-thumb" style="background:url(https://img.youtube.com/vi/${v.id}/maxresdefault.jpg) center/cover;">
+          <div class="video-overlay">
+            <div class="play-btn">
+              <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="video-info">
+          <h3>${v.title}</h3>
+          <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank">Otevřít na YouTube ↗</a>
+        </div>
+      </div>`;
+  }).join('');
+
+  document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+}
+renderVideos();
+
+function openVideo(id) {
+  document.getElementById('modal-iframe').src = `https://www.youtube.com/embed/${id}?autoplay=1`;
+  document.getElementById('video-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeVideoModal() {
+  document.getElementById('modal-iframe').src = '';
+  document.getElementById('video-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('video-modal').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeVideoModal();
+});
+
+// ---- ADMIN AUTH ----
+// Simple hash-based auth (no server needed)
+// Default: username = "admin", password = "rakettaci2025"
+// To change: run btoa(username+':'+password) in browser console and update ADMIN_HASH
+
+const ADMIN_CREDENTIALS = {
+  username: 'admin',
+  // Change this password! SHA-256 of 'rakettaci2025'
+  password: 'rakettaci2025'
+};
+
+function checkSession() {
+  return sessionStorage.getItem('rk_admin') === 'true';
+}
+
+function doLogin() {
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+
+  if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
+    sessionStorage.setItem('rk_admin', 'true');
+    err.classList.remove('show');
+    showGallery();
+  } else {
+    err.classList.add('show');
+    document.getElementById('login-pass').value = '';
+  }
+}
+
+function doLogout() {
+  sessionStorage.removeItem('rk_admin');
+  document.getElementById('gallery-login').style.display = 'flex';
+  document.getElementById('gallery-content').classList.remove('visible');
+}
+
+function showGallery() {
+  document.getElementById('gallery-login').style.display = 'none';
+  document.getElementById('gallery-content').classList.add('visible');
+  renderPhotos();
+}
+
+// Check if already logged in
+if (checkSession()) showGallery();
+
+// Allow Enter key on login
+document.getElementById('login-pass').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+document.getElementById('login-user').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('login-pass').focus();
+});
+
+// ---- GALLERY PHOTOS ----
+let photos = JSON.parse(localStorage.getItem('rk_photos') || '[]');
+
+function savePhotos() {
+  // Save only metadata (not base64) if too large
+  try {
+    localStorage.setItem('rk_photos', JSON.stringify(photos));
+  } catch(e) {
+    console.warn('Storage full, photos stored in memory only');
+  }
+}
+
+function handleFiles(files) {
+  Array.from(files).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      photos.push({ id: Date.now() + Math.random(), src: e.target.result, name: file.name });
+      savePhotos();
+      renderPhotos();
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function deletePhoto(id) {
+  photos = photos.filter(p => p.id !== id);
+  savePhotos();
+  renderPhotos();
+}
+
+function renderPhotos() {
+  const grid = document.getElementById('photo-grid');
+  const empty = document.getElementById('gallery-empty');
+
+  if (photos.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty" id="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>';
+    return;
+  }
+
+  grid.innerHTML = photos.map(p => `
+    <div class="photo-item">
+      <img src="${p.src}" alt="${p.name}" loading="lazy">
+      <div class="photo-lightbox" onclick="openLightbox('${p.src}')">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+      </div>
+      <button class="photo-delete" onclick="deletePhoto(${p.id})">✕</button>
+    </div>
+  `).join('');
+}
+
+// Drag and drop
+const uploadArea = document.getElementById('upload-area');
+['dragenter','dragover'].forEach(e => uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.add('dragover'); }));
+['dragleave','drop'].forEach(e => uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.remove('dragover'); }));
+uploadArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
+
+// ---- LIGHTBOX ----
+function openLightbox(src) {
+  document.getElementById('lightbox-img').src = src;
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+// ---- ADMIN MODAL via NAV ----
+document.getElementById('open-admin-btn').addEventListener('click', e => {
+  e.preventDefault();
+  document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+});
+
+// ---- ENTER = smooth UX ----
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { closeVideoModal(); closeLightbox(); }
+});
+</script>
+</body>
+</html>
