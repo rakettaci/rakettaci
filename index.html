@@ -1035,30 +1035,6 @@
   }
   .photo-item:hover .photo-delete { opacity: 1; }
 
-  /* ── STORAGE METER ───────────────────────────────────────────────── */
-  .storage-bar-wrap {
-    margin-bottom: 28px;
-    background: #f4f4f4;
-    border: 1px solid #e0e0e0;
-    padding: 16px 20px;
-    border-radius: 2px;
-  }
-  .storage-bar-label {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
-    color: #666; margin-bottom: 10px;
-    display: flex; justify-content: space-between;
-  }
-  .storage-bar-label span { color: var(--fire); font-weight: 600; }
-  .storage-bar-track {
-    background: #e0e0e0; height: 6px; border-radius: 3px; overflow: hidden;
-  }
-  .storage-bar-fill {
-    height: 100%; background: var(--fire);
-    border-radius: 3px; width: 0%;
-    transition: width 1s ease;
-  }
-
   /* ── IMPROVED LIGHTBOX ───────────────────────────────────────────── */
   #lightbox {
     display: none; position: fixed; inset: 0;
@@ -1649,7 +1625,7 @@
   <div id="lightbox-zoom-hint">Scroll pro zoom · Klik mimo pro zavřít</div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script type="module">
 document.querySelectorAll('a, button, input, .video-card, .photo-item').forEach(el => {
   el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
   el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
@@ -1738,7 +1714,7 @@ document.getElementById('video-modal').addEventListener('click', e => {
 // ---- FIREBASE ----
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy, serverTimestamp, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 // Cloudinary used for storage instead of Firebase Storage
 
 const firebaseConfig = {
@@ -1984,25 +1960,6 @@ document.getElementById('lightbox').addEventListener('click', e => {
   if (e.target === document.getElementById('lightbox') || e.target === document.getElementById('lightbox-zoom-hint')) closeLightbox();
 });
 
-// ---- CLOUDINARY STORAGE USAGE ----
-async function loadStorageUsage() {
-  try {
-    // Cloudinary usage API requires authentication — it's not accessible client-side without an API key.
-    // Instead, we count photos and estimate based on average image size (~1.5MB each).
-    const q2 = await getDocs(collection(db, 'photos'));
-    const count = q2.size;
-    const estimatedMB = count * 1.5;
-    const FREE_LIMIT_MB = 25 * 1024; // 25 GB free tier in MB
-    const pct = Math.min(100, (estimatedMB / FREE_LIMIT_MB) * 100).toFixed(2);
-    document.getElementById('storage-text').textContent = `${count} fotek (odhad ~${estimatedMB.toFixed(0)} MB / 25 600 MB)`;
-    document.getElementById('storage-bar-fill').style.width = pct + '%';
-    document.getElementById('storage-bar-wrap').style.display = 'block';
-  } catch(e) {
-    document.getElementById('storage-text').textContent = 'Nelze načíst';
-    document.getElementById('storage-bar-wrap').style.display = 'block';
-  }
-}
-
 // ---- CONTACT FORM ----
 async function sendContactMessage() {
   const name = document.getElementById('contact-name').value.trim();
@@ -2176,7 +2133,6 @@ function extractYouTubeId(url) {
 
 async function loadFeaturedVideo() {
   try {
-    const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
     const snap = await getDoc(doc(db, 'settings', 'featuredVideo'));
     if (snap.exists() && snap.data().videoId) {
       const { videoId, title } = snap.data();
@@ -2197,7 +2153,6 @@ function showFeaturedVideo(videoId, title) {
 
 async function loadFeaturedVideoSetting() {
   try {
-    const { getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
     const snap = await getDoc(doc(db, 'settings', 'featuredVideo'));
     if (snap.exists() && snap.data().videoId) {
       const { videoId } = snap.data();
@@ -2207,7 +2162,6 @@ async function loadFeaturedVideoSetting() {
 }
 
 async function saveFeaturedVideo() {
-  const { setDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
   const url = document.getElementById('admin-yt-url').value.trim();
   const videoId = extractYouTubeId(url);
   const status = document.getElementById('admin-yt-status');
@@ -2230,7 +2184,6 @@ async function saveFeaturedVideo() {
 window.saveFeaturedVideo = saveFeaturedVideo;
 
 async function clearFeaturedVideo() {
-  const { deleteDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
   try {
     await deleteDoc(doc(db, 'settings', 'featuredVideo'));
     document.getElementById('featured-video-section').style.display = 'none';
@@ -2267,4 +2220,11 @@ document.getElementById('secret-logo').addEventListener('click', e => {
 });
 document.addEventListener('keydown', e => {
   if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-    document.getElemen
+    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => document.getElementById('login-user').focus(), 600);
+  }
+});
+
+</script>
+</body>
+</html>
