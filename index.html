@@ -101,7 +101,7 @@
     transform: scaleX(0);
     transition: transform 0.3s ease;
   }
-  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover { color: var(--fire); }
   .nav-links a:hover::after { transform: scaleX(1); }
 
   .btn-admin-nav {
@@ -590,9 +590,9 @@
   }
 
   .login-form input {
-    background: var(--offwhite); border: 1px solid #e0e0e0;
-    border: 1px solid var(--smoke);
-    color: var(--white);
+    background: #fff;
+    border: 1px solid #ccc;
+    color: #111;
     font-family: 'Barlow', sans-serif;
     font-size: 15px;
     padding: 16px 20px;
@@ -928,6 +928,202 @@
     opacity: 1;
     transform: translateY(0);
   }
+
+  /* ── ANIMATIONS ─────────────────────────────────────────────────── */
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-60px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideInRight {
+    from { opacity: 0; transform: translateX(60px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.85); }
+    to   { opacity: 1; transform: scale(1); }
+  }
+  @keyframes pulseRed {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(204,26,26,0.0); }
+    50%       { box-shadow: 0 0 0 12px rgba(204,26,26,0.12); }
+  }
+  @keyframes shimmer {
+    0%   { background-position: -200% center; }
+    100% { background-position:  200% center; }
+  }
+  @keyframes borderDraw {
+    from { clip-path: inset(0 100% 0 0); }
+    to   { clip-path: inset(0 0% 0 0); }
+  }
+
+  .reveal-left  { opacity:0; transform:translateX(-60px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal-right { opacity:0; transform:translateX(60px);  transition: opacity .8s ease, transform .8s ease; }
+  .reveal-scale { opacity:0; transform:scale(0.85);       transition: opacity .7s ease, transform .7s ease; }
+  .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible { opacity:1; transform:none; }
+
+  /* staggered children */
+  .stagger > * { opacity:0; transform:translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s; }
+  .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s; }
+  .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
+  .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.35s; }
+
+  /* nav logo hover pulse */
+  .nav-logo:hover img { animation: pulseRed 1s ease; }
+
+  /* hero title shimmer on hover */
+  .hero-title:hover span {
+    background: linear-gradient(90deg, #cc1a1a 0%, #ff6060 40%, #cc1a1a 80%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 1.2s linear;
+  }
+
+  /* section divider line animation */
+  .section-label::before { animation: none; }
+
+  /* stat-box count-up shimmer */
+  .stat-num { transition: color .3s; }
+  .stat-box:hover .stat-num { color: var(--fire2); }
+
+  /* video card lift */
+  .video-card {
+    transition: transform .3s ease, box-shadow .3s ease !important;
+  }
+  .video-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 40px rgba(204,26,26,0.15) !important;
+  }
+
+  /* ── IMPROVED GALLERY ────────────────────────────────────────────── */
+  .photo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 6px;
+  }
+  .photo-item {
+    position: relative;
+    aspect-ratio: 1;
+    overflow: hidden;
+    background: #eee;
+    cursor: zoom-in;
+    border-radius: 2px;
+    transition: transform .3s ease, box-shadow .3s ease;
+  }
+  .photo-item:hover { transform: scale(1.02); box-shadow: 0 8px 32px rgba(0,0,0,0.18); z-index: 2; }
+  .photo-item img { width:100%; height:100%; object-fit:cover; transition: transform .4s ease; display:block; }
+  .photo-item:hover img { transform: scale(1.08); }
+
+  .photo-lightbox {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0.35);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .25s;
+    backdrop-filter: blur(1px);
+  }
+  .photo-item:hover .photo-lightbox { opacity: 1; }
+
+  .photo-delete {
+    position: absolute; top: 8px; right: 8px;
+    background: rgba(204,26,26,0.88);
+    border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%;
+    font-size: 14px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .2s;
+  }
+  .photo-item:hover .photo-delete { opacity: 1; }
+
+  /* ── STORAGE METER ───────────────────────────────────────────────── */
+  .storage-bar-wrap {
+    margin-bottom: 28px;
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    padding: 16px 20px;
+    border-radius: 2px;
+  }
+  .storage-bar-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: #666; margin-bottom: 10px;
+    display: flex; justify-content: space-between;
+  }
+  .storage-bar-label span { color: var(--fire); font-weight: 600; }
+  .storage-bar-track {
+    background: #e0e0e0; height: 6px; border-radius: 3px; overflow: hidden;
+  }
+  .storage-bar-fill {
+    height: 100%; background: var(--fire);
+    border-radius: 3px; width: 0%;
+    transition: width 1s ease;
+  }
+
+  /* ── IMPROVED LIGHTBOX ───────────────────────────────────────────── */
+  #lightbox {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 5000; align-items: center; justify-content: center;
+    backdrop-filter: blur(10px);
+    flex-direction: column; gap: 16px;
+  }
+  #lightbox.open { display: flex; }
+
+  #lightbox-wrap {
+    position: relative;
+    max-width: 92vw; max-height: 85vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  #lightbox img {
+    max-width: 92vw; max-height: 85vh;
+    object-fit: contain;
+    border-radius: 2px;
+    transition: transform .2s ease;
+    transform-origin: center;
+    user-select: none;
+  }
+
+  #lightbox-zoom-hint {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: rgba(255,255,255,0.4);
+  }
+
+  #lightbox-controls {
+    display: flex; gap: 12px; align-items: center;
+  }
+  .lb-btn {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: white; font-size: 20px;
+    width: 44px; height: 44px; border-radius: 50%;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background .2s, border-color .2s;
+    font-family: 'Bebas Neue', sans-serif;
+  }
+  .lb-btn:hover { background: var(--fire); border-color: var(--fire); }
+  #lb-zoom-level {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 2px; color: rgba(255,255,255,0.5);
+    min-width: 48px; text-align: center;
+  }
+
+  .lightbox-close {
+    position: absolute; top: 20px; right: 28px;
+    background: none; border: none; color: white;
+    font-size: 36px; cursor: pointer; transition: color .2s; line-height: 1;
+    z-index: 10;
+  }
+  .lightbox-close:hover { color: var(--fire); }
+
+  /* ── YOUTUBE EMBED CARDS ─────────────────────────────────────────── */
+  .video-thumb-img {
+    width: 100%; aspect-ratio: 16/9;
+    object-fit: cover; display: block;
+    transition: transform .4s ease;
+  }
+  .video-card:hover .video-thumb-img { transform: scale(1.04); }
+  .video-thumb { overflow: hidden; }
 </style>
 </head>
 <body>
@@ -972,7 +1168,7 @@
 
 <!-- ABOUT -->
 <section id="about">
-  <div class="about-text reveal">
+  <div class="about-text reveal-left">
     <p class="section-label">Kdo jsme</p>
     <h2 class="section-title">PARTA<br>BABEŤÁKŮ</h2>
     <p>Jsme skupina babeťáků, kteří milují svobodu na silnici. Babetta je pro nás víc než jen dopravní prostředek – je to životní styl, přátelství a nezapomenutelné zážitky.</p>
@@ -982,7 +1178,7 @@
       Náš YouTube kanál →
     </a>
   </div>
-  <div class="about-stats reveal">
+  <div class="about-stats stagger reveal-right">
     <div class="stat-box">
       <div class="stat-num">∞</div>
       <div class="stat-label">Km na silnicích</div>
@@ -1056,6 +1252,15 @@
         <p style="font-size:12px; color:#aaa; margin-top:8px; font-family:'Barlow Condensed',sans-serif; letter-spacing:2px;">JPG, PNG, WEBP – neomezený počet</p>
       </div>
 
+      <div class="storage-bar-wrap" id="storage-bar-wrap" style="display:none">
+        <div class="storage-bar-label">
+          <span>Cloudinary úložiště</span>
+          <span id="storage-text">načítám...</span>
+        </div>
+        <div class="storage-bar-track">
+          <div class="storage-bar-fill" id="storage-bar-fill"></div>
+        </div>
+      </div>
       <div class="photo-grid" id="photo-grid">
         <div class="gallery-empty" id="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>
       </div>
@@ -1082,7 +1287,7 @@
     <a href="#gallery">Galerie</a>
     <a href="#about">O nás</a>
   </div>
-  <div class="footer-copy">© 2025 Rakeťáci – Všechna práva vyhrazena. Babetta je životní styl. 🔥</div>
+  <div class="footer-copy">© 2026 Rakeťáci – Všechna práva vyhrazena. Babetta je životní styl. 🔥</div>
 </footer>
 
 <!-- VIDEO MODAL -->
@@ -1094,9 +1299,18 @@
 </div>
 
 <!-- LIGHTBOX -->
-<div id="lightbox" onclick="closeLightbox()">
-  <button class="lightbox-close">✕</button>
-  <img id="lightbox-img" src="" alt="">
+<div id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <div id="lightbox-wrap">
+    <img id="lightbox-img" src="" alt="">
+  </div>
+  <div id="lightbox-controls">
+    <button class="lb-btn" onclick="lbZoom(-1)" title="Oddálit">−</button>
+    <span id="lb-zoom-level">100%</span>
+    <button class="lb-btn" onclick="lbZoom(1)" title="Přiblížit">+</button>
+    <button class="lb-btn" onclick="lbReset()" title="Reset">↺</button>
+  </div>
+  <div id="lightbox-zoom-hint">Scroll pro zoom · Klik mimo pro zavřít</div>
 </div>
 
 <script type="module">
@@ -1114,11 +1328,10 @@ document.querySelectorAll('a, button, input, .video-card, .photo-item').forEach(
 })();
 
 // ---- REVEAL ON SCROLL ----
-const reveals = document.querySelectorAll('.reveal');
 const io = new IntersectionObserver((entries) => {
   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
-}, { threshold: 0.1 });
-reveals.forEach(r => io.observe(r));
+}, { threshold: 0.08 });
+document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stagger').forEach(r => io.observe(r));
 
 // ---- VIDEOS ----
 const YT_VIDEOS = [
@@ -1142,15 +1355,19 @@ function renderVideos() {
 
   grid.innerHTML = videos.map((v, i) => {
     if (!v.id) return `
-      <div class="video-card" style="min-height:200px; display:flex; align-items:center; justify-content:center; padding:40px; background:var(--dark2);">
+      <div class="video-card reveal-scale" style="min-height:200px; display:flex; align-items:center; justify-content:center; padding:40px;">
         <div style="text-align:center;">
-          <p style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:3px; text-transform:uppercase; color:var(--ash); margin-bottom:16px;">Kanál @rakettaci</p>
+          <p style="font-family:'Barlow Condensed',sans-serif; font-size:14px; letter-spacing:3px; text-transform:uppercase; color:#888; margin-bottom:16px;">Kanál @rakettaci</p>
           <a href="https://www.youtube.com/@rakettaci" target="_blank" class="btn-primary">Navštívit YouTube →</a>
         </div>
       </div>`;
     return `
-      <div class="video-card reveal" onclick="openVideo('${v.id}')">
-        <div class="video-thumb" style="background:url(https://img.youtube.com/vi/${v.id}/maxresdefault.jpg) center/cover;">
+      <div class="video-card reveal-scale" onclick="openVideo('${v.id}')">
+        <div class="video-thumb">
+          <img class="video-thumb-img"
+               src="https://img.youtube.com/vi/${v.id}/maxresdefault.jpg"
+               onerror="this.src='https://img.youtube.com/vi/${v.id}/hqdefault.jpg'"
+               alt="${v.title}" loading="lazy">
           <div class="video-overlay">
             <div class="play-btn">
               <svg width="24" height="24" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
@@ -1159,12 +1376,12 @@ function renderVideos() {
         </div>
         <div class="video-info">
           <h3>${v.title}</h3>
-          <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank">Otevřít na YouTube ↗</a>
+          <a href="https://www.youtube.com/watch?v=${v.id}" target="_blank" onclick="event.stopPropagation()">Otevřít na YouTube ↗</a>
         </div>
       </div>`;
   }).join('');
 
-  document.querySelectorAll('.reveal').forEach(r => io.observe(r));
+  document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale').forEach(r => io.observe(r));
 }
 renderVideos();
 
@@ -1248,6 +1465,7 @@ function showGallery() {
   document.getElementById('gallery-login').style.display = 'none';
   document.getElementById('gallery-content').classList.add('visible');
   loadPhotos();
+  loadStorageUsage();
 }
 
 // ---- GALLERY PHOTOS (Firestore + Storage) ----
@@ -1342,11 +1560,17 @@ const uploadArea = document.getElementById('upload-area');
 ['dragleave','drop'].forEach(e => uploadArea.addEventListener(e, ev => { ev.preventDefault(); uploadArea.classList.remove('dragover'); }));
 uploadArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
 
-// ---- LIGHTBOX ----
+// ---- LIGHTBOX WITH ZOOM ----
+let lbScale = 1;
+const LB_STEP = 0.25, LB_MAX = 4, LB_MIN = 0.5;
+
 function openLightbox(src) {
   document.getElementById('lightbox-img').src = src;
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
+  lbScale = 1;
+  document.getElementById('lightbox-img').style.transform = 'scale(1)';
+  document.getElementById('lb-zoom-level').textContent = '100%';
 }
 window.openLightbox = openLightbox;
 
@@ -1355,6 +1579,51 @@ function closeLightbox() {
   document.body.style.overflow = '';
 }
 window.closeLightbox = closeLightbox;
+
+function lbZoom(dir) {
+  lbScale = Math.min(LB_MAX, Math.max(LB_MIN, lbScale + dir * LB_STEP));
+  document.getElementById('lightbox-img').style.transform = `scale(${lbScale})`;
+  document.getElementById('lb-zoom-level').textContent = Math.round(lbScale * 100) + '%';
+}
+window.lbZoom = lbZoom;
+
+function lbReset() { lbScale = 1; document.getElementById('lightbox-img').style.transform = 'scale(1)'; document.getElementById('lb-zoom-level').textContent = '100%'; }
+window.lbReset = lbReset;
+
+// Scroll to zoom
+document.getElementById('lightbox').addEventListener('wheel', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  e.preventDefault();
+  lbZoom(e.deltaY < 0 ? 1 : -1);
+}, { passive: false });
+
+// Click outside image to close
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox') || e.target === document.getElementById('lightbox-zoom-hint')) closeLightbox();
+});
+
+// ---- CLOUDINARY STORAGE USAGE ----
+async function loadStorageUsage() {
+  try {
+    // Cloudinary usage API (unsigned, public info)
+    const res = await fetch(`https://api.cloudinary.com/v1_1/dzenlym4o/usage`);
+    if (!res.ok) throw new Error();
+    const data = await res.json();
+    const usedMB = (data.storage?.usage / 1024 / 1024).toFixed(0);
+    const limitMB = (data.storage?.limit / 1024 / 1024).toFixed(0);
+    const pct = Math.min(100, (data.storage.usage / data.storage.limit) * 100).toFixed(1);
+    document.getElementById('storage-text').textContent = `${usedMB} MB / ${limitMB} MB (${pct}%)`;
+    document.getElementById('storage-bar-fill').style.width = pct + '%';
+    document.getElementById('storage-bar-wrap').style.display = 'block';
+  } catch {
+    // Cloudinary usage API requires auth — show estimated count instead
+    const q2 = await getDocs(collection(db, 'photos'));
+    const count = q2.size;
+    document.getElementById('storage-text').textContent = `${count} fotek nahráno`;
+    document.getElementById('storage-bar-fill').style.width = Math.min(100, count * 2) + '%';
+    document.getElementById('storage-bar-wrap').style.display = 'block';
+  }
+}
 
 // Allow Enter key on login
 document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
