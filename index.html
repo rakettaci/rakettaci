@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rakeťáci – Babeťáci</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏍️</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
 <style>
@@ -175,6 +174,7 @@
 
   .hero-logo-img {
     width: 140px;
+    filter: drop-shadow(0 0 30px rgba(204,26,26,0.35));
     position: relative;
     z-index: 1;
     opacity: 0;
@@ -967,8 +967,8 @@
   .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
   .stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:.35s; }
 
-  /* nav logo hover — no glow, just subtle scale */
-  .nav-logo:hover img { transform: scale(1.05); transition: transform 0.3s ease; }
+  /* nav logo hover pulse */
+  .nav-logo:hover img { animation: pulseRed 1s ease; }
 
   /* hero title shimmer on hover */
   .hero-title:hover span {
@@ -1035,73 +1035,27 @@
   .photo-item:hover .photo-delete { opacity: 1; }
 
   /* ── STORAGE METER ───────────────────────────────────────────────── */
-  /* ---- FEATURED VIDEO ---- */
-  #featured-video {
-    background: var(--black);
-    padding: 100px 48px;
+  .storage-bar-wrap {
+    margin-bottom: 28px;
+    background: #f4f4f4;
+    border: 1px solid #e0e0e0;
+    padding: 16px 20px;
+    border-radius: 2px;
   }
-  .featured-inner { max-width: 1200px; margin: 0 auto; }
-  .featured-inner .section-label { color: #e02020; }
-  .featured-inner .section-title { color: var(--white); }
-  .featured-embed-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 16/9;
-    background: #111;
-    border: 1px solid #222;
-    overflow: hidden;
-  }
-  .featured-embed-wrap iframe {
-    position: absolute; inset: 0;
-    width: 100%; height: 100%;
-    border: none;
-  }
-  .featured-no-video {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center; gap: 16px;
-    color: #444;
+  .storage-bar-label {
     font-family: 'Barlow Condensed', sans-serif;
-    font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
+    color: #666; margin-bottom: 10px;
+    display: flex; justify-content: space-between;
   }
-  .featured-no-video svg { opacity: 0.3; }
-  .featured-admin-bar {
-    margin-top: 20px;
-    display: none;
-    gap: 12px;
-    align-items: center;
+  .storage-bar-label span { color: var(--fire); font-weight: 600; }
+  .storage-bar-track {
+    background: #e0e0e0; height: 6px; border-radius: 3px; overflow: hidden;
   }
-  .featured-admin-bar.visible { display: flex; }
-  @media (max-width: 768px) {
-    #featured-video { padding: 80px 24px; }
-    .featured-admin-bar { flex-direction: column; align-items: stretch; }
-  }
-
-  /* ---- PHOTO CAPTION ---- */
-  .photo-caption {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    background: linear-gradient(transparent, rgba(0,0,0,0.82));
-    padding: 32px 14px 12px;
-    font-family: 'Barlow', sans-serif;
-    font-size: 13px;
-    color: rgba(255,255,255,0.9);
-    line-height: 1.4;
-    opacity: 0;
-    transition: opacity 0.3s;
-    pointer-events: none;
-  }
-  .photo-item:hover .photo-caption { opacity: 1; }
-
-  /* Caption in lightbox */
-  #lightbox-caption {
-    font-family: 'Barlow', sans-serif;
-    font-size: 14px;
-    color: rgba(255,255,255,0.65);
-    text-align: center;
-    max-width: 600px;
-    padding: 0 24px;
-    min-height: 20px;
+  .storage-bar-fill {
+    height: 100%; background: var(--fire);
+    border-radius: 3px; width: 0%;
+    transition: width 1s ease;
   }
 
   /* ── IMPROVED LIGHTBOX ───────────────────────────────────────────── */
@@ -1278,6 +1232,50 @@
     color: #bbb; text-align: center; padding: 40px 0;
   }
 
+  /* ---- FEATURED VIDEO ---- */
+  #featured-video {
+    background: var(--black);
+    padding: 100px 48px;
+  }
+  .featured-inner { max-width: 1200px; margin: 0 auto; }
+  .featured-inner .section-label { color: #e02020; }
+  .featured-inner .section-title { color: var(--white); }
+  .featured-embed-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16/9;
+    background: #111;
+    border: 1px solid #222;
+    overflow: hidden;
+  }
+  .featured-embed-wrap iframe {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    border: none;
+  }
+  .featured-no-video {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    color: #444;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 14px; letter-spacing: 3px; text-transform: uppercase;
+  }
+  .featured-no-video svg { opacity: 0.3; }
+  /* Admin bar for featured video */
+  .featured-admin-bar {
+    margin-top: 20px;
+    display: none;
+    gap: 12px;
+    align-items: center;
+  }
+  .featured-admin-bar.visible { display: flex; }
+  @media (max-width: 768px) {
+    #featured-video { padding: 80px 24px; }
+    .featured-admin-bar { flex-direction: column; align-items: stretch; }
+  }
+
+  /* Instagram badge on member card */
   .member-ig-link {
     display: inline-flex; align-items: center; gap: 6px;
     margin-top: 12px;
@@ -1388,8 +1386,8 @@
   <ul class="nav-links">
     <li><a href="#about">O nás</a></li>
     <li><a href="#members">Členové</a></li>
-    <li><a href="#featured-video">Aktuální video</a></li>
-    <li><a href="#videos">Archiv videí</a></li>
+    <li><a href="#featured-video">Video</a></li>
+    <li><a href="#videos">Videa</a></li>
     <li><a href="#gallery">Galerie</a></li>
     <li><a href="#contact">Kontakt</a></li>
     <li><a href="https://www.instagram.com/rakettaci_/" target="_blank">Instagram</a></li>
@@ -1457,16 +1455,19 @@
   <div class="featured-inner">
     <p class="section-label reveal">Aktuální video</p>
     <h2 class="section-title reveal">NEJNOVĚJŠÍ<br><span style="color:var(--fire)">VIDEO</span></h2>
+
     <div class="featured-embed-wrap reveal" id="featured-embed-wrap">
       <div class="featured-no-video" id="featured-no-video">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7s-.3-2-1.2-2.8C20.7 3 19.4 3 18.8 2.9 16.1 2.7 12 2.7 12 2.7s-4.1 0-6.8.2C4.6 3 3.3 3 2.2 4.2 1.3 5 1 7 1 7S.7 9.3.7 11.5v2.1C.7 15.8 1 18 1 18s.3 2 1.2 2.8C3.3 22 4.8 21.9 5.5 22c2.2.2 9.5.3 9.5.3s4.1 0 6.8-.3c.6-.1 1.9-.1 3-1.2C25.7 20 26 18 26 18s.3-2.3.3-4.4v-2.1C23.3 9.3 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/></svg>
         <span>Admin může vložit video</span>
       </div>
     </div>
+
+    <!-- Admin: set featured video -->
     <div class="featured-admin-bar" id="featured-admin-bar">
-      <input class="contact-input" id="featured-url-input" placeholder="URL YouTube videa (např. https://youtu.be/abc123)" style="flex:1; background:#111; border-color:#333; color:#eee;">
+      <input class="contact-input" id="featured-url-input" placeholder="URL YouTube videa (např. https://youtu.be/abc123 nebo https://www.youtube.com/watch?v=abc123)" style="flex:1;">
       <button class="btn-primary" onclick="setFeaturedVideo()" style="border:none;cursor:pointer;font-size:12px;letter-spacing:3px;padding:16px 24px;white-space:nowrap;">Nastavit →</button>
-      <button onclick="clearFeaturedVideo()" style="background:none;border:1px solid #444;color:#777;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:16px 18px;cursor:pointer;white-space:nowrap;transition:all .2s;" onmouseover="this.style.borderColor='var(--fire)';this.style.color='var(--fire)'" onmouseout="this.style.borderColor='#444';this.style.color='#777'">Odebrat</button>
+      <button onclick="clearFeaturedVideo()" style="background:none;border:1px solid #555;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;text-transform:uppercase;padding:16px 18px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--fire)';this.style.color='var(--fire)'" onmouseout="this.style.borderColor='#555';this.style.color='#888'">Odebrat</button>
     </div>
   </div>
 </div>
@@ -1475,7 +1476,7 @@
 <div id="videos" class="section-full">
   <div class="videos-inner" style="padding: 0 48px;">
     <p class="section-label reveal">Naše videa</p>
-    <h2 class="section-title reveal">ARCHIV<br><span style="color:var(--fire)">VIDEÍ</span></h2>
+    <h2 class="section-title reveal">YOUTUBE<br><span style="color:var(--fire)">KANÁL</span></h2>
   </div>
   <div class="videos-inner" style="padding: 0 48px;">
     <div class="videos-grid" id="videos-grid">
@@ -1525,11 +1526,15 @@
         <p style="font-size:12px; color:#aaa; margin-top:8px; font-family:'Barlow Condensed',sans-serif; letter-spacing:2px;">JPG, PNG, WEBP – neomezený počet</p>
       </div>
 
-      <!-- Caption input (shown before upload) -->
-      <div id="caption-input-wrap" style="display:none; margin-bottom:16px;">
-        <input class="login-form input" id="pending-caption" placeholder="Popisek k fotce (volitelné — jako na Instagramu)" style="width:100%; background:#fff; border:1px solid #ccc; color:#111; font-family:'Barlow',sans-serif; font-size:15px; padding:14px 18px; outline:none;">
+      <div class="storage-bar-wrap" id="storage-bar-wrap" style="display:none">
+        <div class="storage-bar-label">
+          <span>Cloudinary úložiště</span>
+          <span id="storage-text">načítám...</span>
+        </div>
+        <div class="storage-bar-track">
+          <div class="storage-bar-fill" id="storage-bar-fill"></div>
+        </div>
       </div>
-
       <div class="photo-grid" id="photo-grid">
         <div class="gallery-empty" id="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>
       </div>
@@ -1659,7 +1664,6 @@
     <button class="lb-btn" onclick="lbZoom(1)" title="Přiblížit">+</button>
     <button class="lb-btn" onclick="lbReset()" title="Reset">↺</button>
   </div>
-  <div id="lightbox-caption"></div>
   <div id="lightbox-zoom-hint">Scroll pro zoom · Klik mimo pro zavřít</div>
 </div>
 
@@ -1821,9 +1825,9 @@ function showGallery() {
   document.getElementById('gallery-content').classList.add('visible');
   document.getElementById('members-admin-bar').style.display = 'block';
   document.getElementById('featured-admin-bar').classList.add('visible');
-  const msgSection = document.getElementById('admin-messages-section');
-  if (msgSection) msgSection.style.display = 'block';
+  document.getElementById('admin-messages-section') && (document.getElementById('admin-messages-section').style.display = 'block');
   loadPhotos();
+  loadStorageUsage();
   loadAdminMessages();
 }
 
@@ -1853,11 +1857,10 @@ function renderPhotos(photos) {
   }
   grid.innerHTML = photos.map(p => `
     <div class="photo-item">
-      <img src="${p.url}" alt="${p.name || ''}" loading="lazy">
-      <div class="photo-lightbox" onclick="openLightbox('${p.url}', ${JSON.stringify(p.caption || '')})">
+      <img src="${p.url}" alt="${p.name}" loading="lazy">
+      <div class="photo-lightbox" onclick="openLightbox('${p.url}')">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
       </div>
-      ${p.caption ? `<div class="photo-caption">${p.caption}</div>` : ''}
       <button class="photo-delete" onclick="deletePhoto('${p.id}')">✕</button>
     </div>
   `).join('');
@@ -1866,18 +1869,11 @@ function renderPhotos(photos) {
 async function handleFiles(files) {
   const btn = document.querySelector('.upload-label');
   const origText = btn.innerHTML;
-  const captionWrap = document.getElementById('caption-input-wrap');
-  const captionInput = document.getElementById('pending-caption');
-
-  // Show caption input if single file, ask user to fill before uploading
-  if (files.length === 1) {
-    captionWrap.style.display = 'block';
-    captionInput.focus();
-  }
 
   for (const file of Array.from(files)) {
     btn.innerHTML = `Nahrávám ${file.name}...`;
     try {
+      // Upload to Cloudinary
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', CLOUDINARY_PRESET);
@@ -1890,13 +1886,11 @@ async function handleFiles(files) {
       const data = await res.json();
       if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
 
-      const caption = captionInput ? captionInput.value.trim() : '';
-
+      // Save URL to Firestore
       await addDoc(collection(db, 'photos'), {
         name: file.name,
         url: data.secure_url,
         publicId: data.public_id,
-        caption: caption,
         createdAt: new Date()
       });
     } catch(e) {
@@ -1906,8 +1900,6 @@ async function handleFiles(files) {
   }
 
   btn.innerHTML = origText;
-  if (captionInput) captionInput.value = '';
-  if (captionWrap) captionWrap.style.display = 'none';
   loadPhotos();
 }
 window.handleFiles = handleFiles;
@@ -1935,15 +1927,13 @@ uploadArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files));
 let lbScale = 1;
 const LB_STEP = 0.25, LB_MAX = 4, LB_MIN = 0.5;
 
-function openLightbox(src, caption) {
+function openLightbox(src) {
   document.getElementById('lightbox-img').src = src;
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
   lbScale = 1;
   document.getElementById('lightbox-img').style.transform = 'scale(1)';
   document.getElementById('lb-zoom-level').textContent = '100%';
-  const cap = document.getElementById('lightbox-caption');
-  if (cap) cap.textContent = caption || '';
 }
 window.openLightbox = openLightbox;
 
@@ -1975,7 +1965,24 @@ document.getElementById('lightbox').addEventListener('click', e => {
   if (e.target === document.getElementById('lightbox') || e.target === document.getElementById('lightbox-zoom-hint')) closeLightbox();
 });
 
-// ---- CLOUDINARY STORAGE: removed (bar deleted) ----
+// ---- CLOUDINARY STORAGE USAGE ----
+async function loadStorageUsage() {
+  try {
+    // Cloudinary usage API requires authentication — it's not accessible client-side without an API key.
+    // Instead, we count photos and estimate based on average image size (~1.5MB each).
+    const q2 = await getDocs(collection(db, 'photos'));
+    const count = q2.size;
+    const estimatedMB = count * 1.5;
+    const FREE_LIMIT_MB = 25 * 1024; // 25 GB free tier in MB
+    const pct = Math.min(100, (estimatedMB / FREE_LIMIT_MB) * 100).toFixed(2);
+    document.getElementById('storage-text').textContent = `${count} fotek (odhad ~${estimatedMB.toFixed(0)} MB / 25 600 MB)`;
+    document.getElementById('storage-bar-fill').style.width = pct + '%';
+    document.getElementById('storage-bar-wrap').style.display = 'block';
+  } catch(e) {
+    document.getElementById('storage-text').textContent = 'Nelze načíst';
+    document.getElementById('storage-bar-wrap').style.display = 'block';
+  }
+}
 
 // ---- CONTACT FORM ----
 async function sendContactMessage() {
@@ -2017,12 +2024,18 @@ async function loadAdminMessages() {
   section.style.display = 'block';
   const list = document.getElementById('admin-msg-list');
   list.innerHTML = '<div class="admin-msg-empty">Načítám zprávy...</div>';
+
   try {
     const q = query(collection(db, 'contact_messages'), orderBy('createdAt', 'desc'));
     const snap = await getDocs(q);
     const msgs = [];
     snap.forEach(d => msgs.push({ id: d.id, ...d.data() }));
-    if (msgs.length === 0) { list.innerHTML = '<div class="admin-msg-empty">Žádné zprávy zatím.</div>'; return; }
+
+    if (msgs.length === 0) {
+      list.innerHTML = '<div class="admin-msg-empty">Žádné zprávy zatím.</div>';
+      return;
+    }
+
     list.innerHTML = msgs.map(m => {
       const date = m.createdAt?.toDate ? m.createdAt.toDate().toLocaleString('cs-CZ') : '—';
       return `
@@ -2044,25 +2057,32 @@ async function loadAdminMessages() {
 
 async function deleteMessage(docId) {
   if (!confirm('Smazat tuto zprávu?')) return;
-  try { await deleteDoc(doc(db, 'contact_messages', docId)); loadAdminMessages(); }
-  catch(e) { alert('Chyba při mazání.'); }
+  try {
+    await deleteDoc(doc(db, 'contact_messages', docId));
+    loadAdminMessages();
+  } catch(e) {
+    alert('Chyba při mazání.');
+  }
 }
 window.deleteMessage = deleteMessage;
 
 // ---- MEMBERS ----
 async function loadMembers() {
+  const grid = document.getElementById('members-grid');
   try {
     const q = query(collection(db, 'members'), orderBy('createdAt', 'asc'));
     const snap = await getDocs(q);
     const members = [];
     snap.forEach(d => members.push({ id: d.id, ...d.data() }));
     renderMembers(members);
-  } catch(e) { renderMembers([]); }
+  } catch(e) {
+    // Firestore might not have the collection yet — show placeholder
+    renderMembers([]);
+  }
 }
 
 function renderMembers(members) {
   const grid = document.getElementById('members-grid');
-  if (!grid) return;
   if (!members || members.length === 0) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#bbb;">Zatím žádní členové. Admin může přidat.</div>`;
     return;
@@ -2072,7 +2092,8 @@ function renderMembers(members) {
       <div class="member-photo-wrap">
         ${m.photoUrl
           ? `<img src="${m.photoUrl}" alt="${m.name}" onerror="this.parentNode.innerHTML='<div class=member-photo-placeholder>🏍️</div>'">`
-          : `<div class="member-photo-placeholder">🏍️</div>`}
+          : `<div class="member-photo-placeholder">🏍️</div>`
+        }
       </div>
       <div class="member-name">${m.name}</div>
       ${m.role ? `<div class="member-role">${m.role}</div>` : ''}
@@ -2099,32 +2120,46 @@ async function addMember() {
   const instagramUrl = document.getElementById('member-instagram-input').value.trim();
   if (!name) { alert('Zadejte jméno člena.'); return; }
   try {
-    await addDoc(collection(db, 'members'), { name, role, photoUrl, instagramUrl, createdAt: serverTimestamp() });
+    await addDoc(collection(db, 'members'), {
+      name, role, photoUrl, instagramUrl,
+      createdAt: serverTimestamp()
+    });
     document.getElementById('member-name-input').value = '';
     document.getElementById('member-role-input').value = '';
     document.getElementById('member-photo-input').value = '';
     document.getElementById('member-instagram-input').value = '';
     loadMembers();
-  } catch(e) { alert('Chyba při přidávání člena.'); console.error(e); }
+  } catch(e) {
+    alert('Chyba při přidávání člena.');
+    console.error(e);
+  }
 }
 window.addMember = addMember;
 
 async function deleteMember(docId) {
   if (!confirm('Odebrat tohoto člena?')) return;
-  try { await deleteDoc(doc(db, 'members', docId)); loadMembers(); }
-  catch(e) { alert('Chyba při mazání.'); }
+  try {
+    await deleteDoc(doc(db, 'members', docId));
+    loadMembers();
+  } catch(e) {
+    alert('Chyba při mazání.');
+  }
 }
 window.deleteMember = deleteMember;
 
 // ---- FEATURED VIDEO ----
 function extractYouTubeId(url) {
   if (!url) return null;
-  let m = url.match(/youtu\.be\/([^?&\s]+)/);
+  // Handle youtu.be/ID
+  let m = url.match(/youtu\.be\/([^?&]+)/);
   if (m) return m[1];
-  m = url.match(/[?&]v=([^&\s]+)/);
+  // Handle youtube.com/watch?v=ID
+  m = url.match(/[?&]v=([^&]+)/);
   if (m) return m[1];
-  m = url.match(/embed\/([^?&\s]+)/);
+  // Handle youtube.com/embed/ID
+  m = url.match(/embed\/([^?&]+)/);
   if (m) return m[1];
+  // Maybe it's just the ID already (11 chars)
   if (/^[a-zA-Z0-9_-]{11}$/.test(url.trim())) return url.trim();
   return null;
 }
@@ -2151,10 +2186,14 @@ function renderFeaturedVideo(videoId) {
 
 async function loadFeaturedVideo() {
   try {
-    const { getDoc, doc: fsDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    const snap = await getDoc(fsDoc(db, 'settings', 'featured_video'));
-    if (snap.exists()) renderFeaturedVideo(snap.data().videoId || null);
-  } catch(e) { console.warn('Featured video:', e); }
+    const { getDoc, doc: firestoreDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    const snap = await getDoc(firestoreDoc(db, 'settings', 'featured_video'));
+    if (snap.exists()) {
+      renderFeaturedVideo(snap.data().videoId || null);
+    }
+  } catch(e) {
+    console.warn('Featured video load error:', e);
+  }
 }
 
 async function setFeaturedVideo() {
@@ -2162,26 +2201,33 @@ async function setFeaturedVideo() {
   const videoId = extractYouTubeId(url);
   if (!videoId) { alert('Nepodařilo se rozpoznat YouTube URL. Zkontroluj formát.'); return; }
   try {
-    const { setDoc, doc: fsDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    await setDoc(fsDoc(db, 'settings', 'featured_video'), { videoId });
+    const { setDoc, doc: firestoreDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    await setDoc(firestoreDoc(db, 'settings', 'featured_video'), { videoId });
     renderFeaturedVideo(videoId);
     document.getElementById('featured-url-input').value = '';
-  } catch(e) { alert('Chyba při ukládání videa.'); console.error(e); }
+  } catch(e) {
+    alert('Chyba při ukládání videa.');
+    console.error(e);
+  }
 }
 window.setFeaturedVideo = setFeaturedVideo;
 
 async function clearFeaturedVideo() {
   if (!confirm('Odebrat aktuální video?')) return;
   try {
-    const { deleteDoc: fsDelete, doc: fsDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
-    await fsDelete(fsDoc(db, 'settings', 'featured_video'));
+    const { deleteDoc, doc: firestoreDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+    await deleteDoc(firestoreDoc(db, 'settings', 'featured_video'));
     renderFeaturedVideo(null);
-  } catch(e) { alert('Chyba při odebírání videa.'); }
+  } catch(e) {
+    alert('Chyba při odebírání videa.');
+  }
 }
 window.clearFeaturedVideo = clearFeaturedVideo;
 
-// ---- INIT: load public data ----
+// Load featured video on page start (public)
 loadFeaturedVideo();
+
+// Load members on page start (public)
 loadMembers();
 
 
