@@ -1031,10 +1031,10 @@
       <div class="lock-icon">🔒</div>
       <p style="font-family:'Barlow Condensed',sans-serif; font-size:15px; letter-spacing:3px; text-transform:uppercase; color:var(--ash);">Přihlaste se jako admin</p>
       <div class="login-form">
-        <input type="text" id="login-user" placeholder="Uživatelské jméno" autocomplete="off">
+        <input type="email" id="login-user" placeholder="E-mail (admin)" autocomplete="email">
         <input type="password" id="login-pass" placeholder="Heslo">
         <p class="login-error" id="login-error">❌ Špatné jméno nebo heslo</p>
-        <button class="btn-primary" onclick="doLogin()" style="border:none; font-size:13px; letter-spacing:3px; text-transform:uppercase; padding:16px; cursor:none;">
+        <button id="login-btn" class="btn-primary" onclick="doLogin()" style="border:none; font-size:13px; letter-spacing:3px; text-transform:uppercase; padding:16px; cursor:pointer;">
           Přihlásit se →
         </button>
       </div>
@@ -1099,7 +1099,7 @@
   <img id="lightbox-img" src="" alt="">
 </div>
 
-<script>
+<script type="module">
 document.querySelectorAll('a, button, input, .video-card, .photo-item').forEach(el => {
   el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
   el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
@@ -1182,108 +1182,159 @@ document.getElementById('video-modal').addEventListener('click', e => {
   if (e.target === e.currentTarget) closeVideoModal();
 });
 
-// ---- ADMIN AUTH ----
-// Simple hash-based auth (no server needed)
-// Default: username = "admin", password = "rakettaci2025"
-// To change: run btoa(username+':'+password) in browser console and update ADMIN_HASH
+// ---- FIREBASE ----
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+// Cloudinary used for storage instead of Firebase Storage
 
-const ADMIN_CREDENTIALS = {
-  username: 'admin',
-  // Change this password! SHA-256 of 'rakettaci2025'
-  password: 'rakettaci2025'
+const firebaseConfig = {
+  apiKey: "AIzaSyBHvj_0YMZXSAKFIuKEAYsBgOXZc2J3Al0",
+  authDomain: "rakettaci.firebaseapp.com",
+  projectId: "rakettaci",
+  storageBucket: "rakettaci.firebasestorage.app",
+  messagingSenderId: "533998680662",
+  appId: "1:533998680662:web:378d96b33e9e98aebe99f7",
+  measurementId: "G-E37R86ZLDK"
 };
 
-function checkSession() {
-  return sessionStorage.getItem('rk_admin') === 'true';
-}
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+// Cloudinary config
+const CLOUDINARY_CLOUD = 'dzenlym4o';
+const CLOUDINARY_PRESET = 'rakettaci_upload';
 
-function doLogin() {
-  const u = document.getElementById('login-user').value.trim();
-  const p = document.getElementById('login-pass').value;
-  const err = document.getElementById('login-error');
-
-  if (u === ADMIN_CREDENTIALS.username && p === ADMIN_CREDENTIALS.password) {
-    sessionStorage.setItem('rk_admin', 'true');
-    err.classList.remove('show');
+// ---- AUTH STATE ----
+onAuthStateChanged(auth, user => {
+  if (user) {
     showGallery();
   } else {
+    document.getElementById('gallery-login').style.display = 'flex';
+    document.getElementById('gallery-content').classList.remove('visible');
+  }
+});
+
+// ---- LOGIN ----
+async function doLogin() {
+  const email = document.getElementById('login-user').value.trim();
+  const pass = document.getElementById('login-pass').value;
+  const err = document.getElementById('login-error');
+  const btn = document.getElementById('login-btn');
+
+  btn.textContent = 'Přihlašuji...';
+  btn.disabled = true;
+
+  try {
+    await signInWithEmailAndPassword(auth, email, pass);
+    err.classList.remove('show');
+  } catch(e) {
     err.classList.add('show');
     document.getElementById('login-pass').value = '';
+  } finally {
+    btn.textContent = 'Přihlásit se →';
+    btn.disabled = false;
   }
 }
+window.doLogin = doLogin;
 
-function doLogout() {
-  sessionStorage.removeItem('rk_admin');
-  document.getElementById('gallery-login').style.display = 'flex';
-  document.getElementById('gallery-content').classList.remove('visible');
+// ---- LOGOUT ----
+async function doLogout() {
+  await signOut(auth);
 }
+window.doLogout = doLogout;
 
 function showGallery() {
   document.getElementById('gallery-login').style.display = 'none';
   document.getElementById('gallery-content').classList.add('visible');
-  renderPhotos();
+  loadPhotos();
 }
 
-// Check if already logged in
-if (checkSession()) showGallery();
+// ---- GALLERY PHOTOS (Firestore + Storage) ----
+async function loadPhotos() {
+  const grid = document.getElementById('photo-grid');
+  grid.innerHTML = '<div class="gallery-empty">Načítám fotky...</div>';
 
-// Allow Enter key on login
-document.getElementById('login-pass').addEventListener('keydown', e => {
-  if (e.key === 'Enter') doLogin();
-});
-document.getElementById('login-user').addEventListener('keydown', e => {
-  if (e.key === 'Enter') document.getElementById('login-pass').focus();
-});
-
-// ---- GALLERY PHOTOS ----
-let photos = JSON.parse(localStorage.getItem('rk_photos') || '[]');
-
-function savePhotos() {
-  // Save only metadata (not base64) if too large
   try {
-    localStorage.setItem('rk_photos', JSON.stringify(photos));
+    const q = query(collection(db, 'photos'), orderBy('createdAt', 'desc'));
+    const snap = await getDocs(q);
+    const photos = [];
+    snap.forEach(d => photos.push({ id: d.id, ...d.data() }));
+    renderPhotos(photos);
   } catch(e) {
-    console.warn('Storage full, photos stored in memory only');
+    grid.innerHTML = '<div class="gallery-empty">Chyba při načítání fotek.</div>';
+    console.error(e);
   }
 }
+window.loadPhotos = loadPhotos;
 
-function handleFiles(files) {
-  Array.from(files).forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      photos.push({ id: Date.now() + Math.random(), src: e.target.result, name: file.name });
-      savePhotos();
-      renderPhotos();
-    };
-    reader.readAsDataURL(file);
-  });
-}
-
-function deletePhoto(id) {
-  photos = photos.filter(p => p.id !== id);
-  savePhotos();
-  renderPhotos();
-}
-
-function renderPhotos() {
+function renderPhotos(photos) {
   const grid = document.getElementById('photo-grid');
-  const empty = document.getElementById('gallery-empty');
-
-  if (photos.length === 0) {
-    grid.innerHTML = '<div class="gallery-empty" id="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>';
+  if (!photos || photos.length === 0) {
+    grid.innerHTML = '<div class="gallery-empty">Zatím žádné fotky. Nahrajte první!</div>';
     return;
   }
-
   grid.innerHTML = photos.map(p => `
     <div class="photo-item">
-      <img src="${p.src}" alt="${p.name}" loading="lazy">
-      <div class="photo-lightbox" onclick="openLightbox('${p.src}')">
+      <img src="${p.url}" alt="${p.name}" loading="lazy">
+      <div class="photo-lightbox" onclick="openLightbox('${p.url}')">
         <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
       </div>
-      <button class="photo-delete" onclick="deletePhoto(${p.id})">✕</button>
+      <button class="photo-delete" onclick="deletePhoto('${p.id}')">✕</button>
     </div>
   `).join('');
 }
+
+async function handleFiles(files) {
+  const btn = document.querySelector('.upload-label');
+  const origText = btn.innerHTML;
+
+  for (const file of Array.from(files)) {
+    btn.innerHTML = `Nahrávám ${file.name}...`;
+    try {
+      // Upload to Cloudinary
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', CLOUDINARY_PRESET);
+      formData.append('folder', 'rakettaci');
+
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+        method: 'POST',
+        body: formData
+      });
+      const data = await res.json();
+      if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
+
+      // Save URL to Firestore
+      await addDoc(collection(db, 'photos'), {
+        name: file.name,
+        url: data.secure_url,
+        publicId: data.public_id,
+        createdAt: new Date()
+      });
+    } catch(e) {
+      console.error('Upload error:', e);
+      alert('Chyba při nahrávání: ' + file.name);
+    }
+  }
+
+  btn.innerHTML = origText;
+  loadPhotos();
+}
+window.handleFiles = handleFiles;
+
+async function deletePhoto(docId) {
+  if (!confirm('Smazat fotku?')) return;
+  try {
+    await deleteDoc(doc(db, 'photos', docId));
+    // Note: image stays on Cloudinary (deletion requires server-side signed request)
+    loadPhotos();
+  } catch(e) {
+    alert('Chyba při mazání.');
+    console.error(e);
+  }
+}
+window.deletePhoto = deletePhoto;
 
 // Drag and drop
 const uploadArea = document.getElementById('upload-area');
@@ -1297,13 +1348,19 @@ function openLightbox(src) {
   document.getElementById('lightbox').classList.add('open');
   document.body.style.overflow = 'hidden';
 }
+window.openLightbox = openLightbox;
+
 function closeLightbox() {
   document.getElementById('lightbox').classList.remove('open');
   document.body.style.overflow = '';
 }
+window.closeLightbox = closeLightbox;
+
+// Allow Enter key on login
+document.getElementById('login-pass').addEventListener('keydown', e => { if (e.key === 'Enter') doLogin(); });
+document.getElementById('login-user').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('login-pass').focus(); });
 
 // ---- SECRET ADMIN ACCESS ----
-// Option 1: click logo 5x
 let logoClicks = 0, logoTimer;
 document.getElementById('secret-logo').addEventListener('click', e => {
   e.preventDefault();
@@ -1312,26 +1369,15 @@ document.getElementById('secret-logo').addEventListener('click', e => {
   logoTimer = setTimeout(() => { logoClicks = 0; }, 2000);
   if (logoClicks >= 5) {
     logoClicks = 0;
-    openAdminLogin();
+    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => document.getElementById('login-user').focus(), 600);
   }
 });
-// Option 2: Ctrl+Shift+A
 document.addEventListener('keydown', e => {
-  if (e.ctrlKey && e.shiftKey && e.key === 'A') openAdminLogin();
-});
-function openAdminLogin() {
-  if (checkSession()) {
+  if (e.ctrlKey && e.shiftKey && e.key === 'A') {
     document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-  } else {
-    document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
-    setTimeout(() => {
-      document.getElementById('login-user').focus();
-    }, 600);
+    setTimeout(() => document.getElementById('login-user').focus(), 600);
   }
-}
-
-// ---- ENTER = smooth UX ----
-document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { closeVideoModal(); closeLightbox(); }
 });
 </script>
