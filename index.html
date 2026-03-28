@@ -1687,8 +1687,16 @@
         <button class="btn-primary" onclick="addMember()" style="border:none;cursor:pointer;white-space:nowrap;font-size:12px;letter-spacing:3px;padding:16px 24px;">Přidat →</button>
       </div>
       <div style="margin-top:12px; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-        <input class="contact-input" id="member-photo-input" placeholder="URL fotky (volitelné — jinak emoji 🏍️)">
-        <input class="contact-input" id="member-instagram-input" placeholder="Instagram URL (volitelné, např. https://instagram.com/jmeno)">
+        <!-- Photo upload -->
+        <div style="position:relative;">
+          <input type="file" id="member-photo-file" accept="image/*" style="display:none;" onchange="previewMemberPhoto(this)">
+          <div id="member-photo-preview-wrap" style="display:flex;align-items:center;gap:12px;">
+            <div id="member-photo-preview" style="width:48px;height:48px;border-radius:50%;border:2px solid #e0e0e0;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;">🏍️</div>
+            <button type="button" onclick="document.getElementById('member-photo-file').click()" style="flex:1;background:none;border:1px dashed #ccc;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:15px 12px;cursor:pointer;transition:all .2s;text-align:left;" onmouseover="this.style.borderColor='var(--fire)';this.style.color='var(--fire)'" onmouseout="this.style.borderColor='#ccc';this.style.color='#888'" id="member-photo-btn">📷 Nahrát profilovku</button>
+          </div>
+          <p id="member-photo-status" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:#aaa;margin-top:6px;display:none;"></p>
+        </div>
+        <input class="contact-input" id="member-instagram-input" placeholder="Instagram URL (volitelné)">
       </div>
     </div>
   </div>
@@ -2246,25 +2254,75 @@ function renderMembers(members) {
   });
 }
 
+// ---- MEMBER PHOTO PREVIEW ----
+function previewMemberPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const preview = document.getElementById('member-photo-preview');
+  const btn = document.getElementById('member-photo-btn');
+  const reader = new FileReader();
+  reader.onload = e => {
+    preview.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+    btn.textContent = '✓ ' + file.name.substring(0, 20) + (file.name.length > 20 ? '…' : '');
+  };
+  reader.readAsDataURL(file);
+}
+window.previewMemberPhoto = previewMemberPhoto;
+
 async function addMember() {
   const name = document.getElementById('member-name-input').value.trim();
   const role = document.getElementById('member-role-input').value.trim();
-  const photoUrl = document.getElementById('member-photo-input').value.trim();
   const instagramUrl = document.getElementById('member-instagram-input').value.trim();
+  const photoFile = document.getElementById('member-photo-file').files[0];
   if (!name) { alert('Zadejte jméno člena.'); return; }
+
+  const btn = document.querySelector('#members-admin-bar .btn-primary');
+  const status = document.getElementById('member-photo-status');
+  btn.textContent = 'Ukládám...';
+  btn.disabled = true;
+
+  let photoUrl = '';
+  if (photoFile) {
+    status.textContent = 'Nahrávám fotku...';
+    status.style.display = 'block';
+    try {
+      const formData = new FormData();
+      formData.append('file', photoFile);
+      formData.append('upload_preset', CLOUDINARY_PRESET);
+      formData.append('folder', 'rakettaci/avatars');
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+        method: 'POST', body: formData
+      });
+      const data = await res.json();
+      if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
+      photoUrl = data.secure_url;
+      status.textContent = '✓ Fotka nahrána';
+    } catch(e) {
+      status.textContent = '❌ Chyba při nahrávání fotky';
+      console.error(e);
+    }
+  }
+
   try {
     await addDoc(collection(db, 'members'), {
       name, role, photoUrl, instagramUrl,
       createdAt: serverTimestamp()
     });
+    // Reset form
     document.getElementById('member-name-input').value = '';
     document.getElementById('member-role-input').value = '';
-    document.getElementById('member-photo-input').value = '';
     document.getElementById('member-instagram-input').value = '';
+    document.getElementById('member-photo-file').value = '';
+    document.getElementById('member-photo-preview').innerHTML = '🏍️';
+    document.getElementById('member-photo-btn').textContent = '📷 Nahrát profilovku';
+    status.style.display = 'none';
     loadMembers();
   } catch(e) {
     alert('Chyba při přidávání člena.');
     console.error(e);
+  } finally {
+    btn.textContent = 'Přidat →';
+    btn.disabled = false;
   }
 }
 window.addMember = addMember;
