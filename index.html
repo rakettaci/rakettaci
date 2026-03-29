@@ -1030,13 +1030,10 @@
 
     /* Members */
     #members { padding: 70px 20px; }
-    .members-grid { grid-template-columns: repeat(2, 1fr); gap: 14px; }
-    .member-card { padding: 28px 16px 22px; }
+    .members-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .member-card { padding: 24px 16px 20px; }
     .member-photo-wrap { width: 100px; height: 100px; }
     .member-name { font-size: 24px; }
-    .member-modal-box { padding: 36px 24px 32px; }
-    .member-modal-photo { width: 130px; height: 130px; }
-    .member-modal-name { font-size: 34px; }
     .add-member-form { grid-template-columns: 1fr; }
     #members-admin-bar > div[style*="grid-template-columns"] { grid-template-columns: 1fr !important; }
 
@@ -1077,8 +1074,8 @@
 
   /* ---- REVEAL ANIMATIONS ---- */
   .reveal {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0;
+    transform: translateY(40px);
     transition: opacity 0.8s ease, transform 0.8s ease;
   }
   .reveal.visible {
@@ -1112,13 +1109,13 @@
     to   { clip-path: inset(0 0% 0 0); }
   }
 
-  .reveal-left  { opacity:1; transform:translateX(0); transition: opacity .8s ease, transform .8s ease; }
-  .reveal-right { opacity:1; transform:translateX(0);  transition: opacity .8s ease, transform .8s ease; }
-  .reveal-scale { opacity:1; transform:scale(1);       transition: opacity .7s ease, transform .7s ease; }
+  .reveal-left  { opacity:0; transform:translateX(-60px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal-right { opacity:0; transform:translateX(60px);  transition: opacity .8s ease, transform .8s ease; }
+  .reveal-scale { opacity:0; transform:scale(0.85);       transition: opacity .7s ease, transform .7s ease; }
   .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible { opacity:1; transform:none; }
 
   /* staggered children */
-  .stagger > * { opacity:1; transform:translateY(0); transition: opacity .6s ease, transform .6s ease; }
+  .stagger > * { opacity:0; transform:translateY(24px); transition: opacity .6s ease, transform .6s ease; }
   .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s; }
   .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s; }
   .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
@@ -1445,80 +1442,6 @@
   }
   .member-instagram:hover { opacity: 1; }
 
-  /* ---- MEMBER MODAL ---- */
-  #member-modal {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.88);
-    z-index: 6000;
-    align-items: center;
-    justify-content: center;
-    backdrop-filter: blur(8px);
-    padding: 20px;
-  }
-  #member-modal.open { display: flex; }
-  .member-modal-box {
-    background: #fff;
-    border: 1px solid #e0e0e0;
-    border-top: 4px solid var(--fire);
-    padding: 48px 40px 40px;
-    width: 100%;
-    max-width: 480px;
-    position: relative;
-    text-align: center;
-    animation: scaleIn 0.25s ease forwards;
-  }
-  .member-modal-photo {
-    width: 160px; height: 160px;
-    border-radius: 50%;
-    margin: 0 auto 24px;
-    overflow: hidden;
-    border: 4px solid #e0e0e0;
-    background: #ddd;
-  }
-  .member-modal-photo img { width:100%; height:100%; object-fit:cover; }
-  .member-modal-photo-placeholder { width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;background:linear-gradient(135deg,#f0f0f0,#e0e0e0); }
-  .member-modal-name {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: 42px; letter-spacing: 4px;
-    color: var(--black); margin-bottom: 6px;
-  }
-  .member-modal-role {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 5px; text-transform: uppercase;
-    color: var(--fire); margin-bottom: 20px;
-  }
-  .member-modal-ig {
-    display: inline-flex;
-    align-items: center; gap: 8px;
-    margin-top: 16px;
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 12px; letter-spacing: 3px; text-transform: uppercase;
-    font-weight: 700;
-    padding: 12px 28px;
-    text-decoration: none;
-    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-    color: white;
-    transition: opacity 0.2s, transform 0.2s;
-  }
-  .member-modal-ig:hover { opacity: 0.88; transform: scale(1.03); }
-  .member-modal-close {
-    position: absolute; top: 16px; right: 20px;
-    background: none; border: none;
-    font-size: 22px; color: #bbb; cursor: pointer;
-    transition: color 0.2s; line-height: 1;
-    font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px;
-  }
-  .member-modal-close:hover { color: var(--fire); }
-  .member-card-hint {
-    font-family: 'Barlow Condensed', sans-serif;
-    font-size: 10px; letter-spacing: 3px; text-transform: uppercase;
-    color: #ccc; margin-top: 12px;
-    opacity: 0; transition: opacity 0.3s;
-  }
-  .member-card:hover .member-card-hint { opacity: 1; }
-
   /* Admin: add member */
   .members-admin-bar {
     margin-top: 40px; padding-top: 32px;
@@ -1563,6 +1486,69 @@
   }
   .video-card:hover .video-thumb-img { transform: scale(1.04); }
   .video-thumb { overflow: hidden; }
+
+  /* ---- MEMBER MODAL ---- */
+  #member-modal {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.88); z-index: 6000;
+    align-items: center; justify-content: center;
+    backdrop-filter: blur(8px); padding: 20px;
+  }
+  #member-modal.open { display: flex; }
+  .member-modal-box {
+    background: #fff; border: 1px solid #e0e0e0;
+    border-top: 4px solid var(--fire);
+    padding: 48px 40px 40px; width: 100%; max-width: 480px;
+    position: relative; text-align: center;
+    animation: scaleIn 0.25s ease forwards;
+  }
+  .member-modal-photo {
+    width: 160px; height: 160px; border-radius: 50%;
+    margin: 0 auto 24px; overflow: hidden;
+    border: 4px solid #e0e0e0; background: #ddd;
+  }
+  .member-modal-photo img { width:100%; height:100%; object-fit:cover; }
+  .member-modal-placeholder {
+    width:100%; height:100%; display:flex;
+    align-items:center; justify-content:center;
+    font-size:60px; background:linear-gradient(135deg,#f0f0f0,#e0e0e0);
+  }
+  .member-modal-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 42px; letter-spacing: 4px; color: var(--black); margin-bottom: 6px;
+  }
+  .member-modal-role {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 5px; text-transform: uppercase;
+    color: var(--fire); margin-bottom: 20px;
+  }
+  .member-modal-ig {
+    display: inline-flex; align-items: center; gap: 8px; margin-top: 16px;
+    font-family: 'Barlow Condensed', sans-serif; font-size: 12px;
+    letter-spacing: 3px; text-transform: uppercase; font-weight: 700;
+    padding: 12px 28px; text-decoration: none;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    color: white; transition: opacity 0.2s, transform 0.2s;
+  }
+  .member-modal-ig:hover { opacity: 0.88; transform: scale(1.03); }
+  .member-modal-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; font-size: 22px; color: #bbb;
+    cursor: pointer; transition: color 0.2s; line-height: 1;
+    font-family: 'Bebas Neue', sans-serif; letter-spacing: 2px;
+  }
+  .member-modal-close:hover { color: var(--fire); }
+  .member-card-hint {
+    font-family: 'Barlow Condensed', sans-serif; font-size: 10px;
+    letter-spacing: 3px; text-transform: uppercase; color: #ccc;
+    margin-top: 10px; opacity: 0; transition: opacity 0.3s;
+  }
+  .member-card:hover .member-card-hint { opacity: 1; }
+  @media (max-width: 768px) {
+    .member-modal-box { padding: 36px 24px 32px; }
+    .member-modal-photo { width: 120px; height: 120px; }
+    .member-modal-name { font-size: 34px; }
+  }
 </style>
 </head>
 <body>
@@ -1638,8 +1624,8 @@
   <div class="about-text reveal-left">
     <p class="section-label">Kdo jsme</p>
     <h2 class="section-title">PARTA<br>BABEŤÁKŮ</h2>
-    <p>Jsme pár hlupáků na Babettách 210/215, kteří se rozhodli, že nejlepší způsob jak strávit víkend je nacpat se na mopedy z 80. let a jet co nejdál. Zdravý rozum nám chybí, ale vůle vydržet na tvrdém sedle stovky kilometrů? Tu máme.</p>
-    <p>Každá vyjížďka je dobrodružství plné poruch, improvizace a nezapomenutelných momentů. Sledujte nás na YouTube a Instagramu – ať se pobavíte i vy!</p>
+    <p>Jsme pár hlupáků na Babettách 210/215, kteří se rozhodli, že nejlepší způsob jak strávit víkend je nacpat se na mopedy z 80. let a jet co nejdál. Zdravý rozum nám chybí – ale vůle vydržet na tvrdém sedle stovky kilometrů? Tu máme víc než dost.</p>
+    <p>Každá vyjížďka je dobrodružství plné poruch, improvizace a momentů, které se jen tak nezapomenou. Sledujte nás na Instagramu!</p>
     <br>
     <a href="#members" class="btn-ghost" style="margin-top:8px;">
       Poznat partu →
@@ -1647,16 +1633,16 @@
   </div>
   <div class="about-stats stagger reveal-right">
     <div class="stat-box">
-      <div class="stat-num" style="font-size:36px; line-height:1.1;">550</div>
-      <div class="stat-label">km — 2024 · Havířov ↔ Brníčko</div>
+      <div class="stat-num" style="font-size:38px;line-height:1.1;">550</div>
+      <div class="stat-label">km · 2024 · Havířov ↔ Brníčko</div>
     </div>
     <div class="stat-box">
-      <div class="stat-num" style="font-size:36px; line-height:1.1;">1100</div>
-      <div class="stat-label">km — 2025 · Havířov ↔ Praha & Karlštejn</div>
+      <div class="stat-num" style="font-size:34px;line-height:1.1;">1100</div>
+      <div class="stat-label">km · 2025 · Havířov ↔ Praha &amp; Karlštejn</div>
     </div>
     <div class="stat-box">
       <div class="stat-num">⌛</div>
-      <div class="stat-label">km — 2026 · Kam nás to zanese?</div>
+      <div class="stat-label">km · 2026 · Kam nás to zanese?</div>
     </div>
     <div class="stat-box">
       <div class="stat-num">🔥</div>
@@ -1689,18 +1675,16 @@
     <p class="section-label reveal">Naše fotky</p>
     <h2 class="section-title reveal">FOTO<br><span style="color:var(--fire)">GALERIE</span></h2>
 
-    <!-- PUBLIC: Instagram Feed via Elfsight -->
-    <div class="reveal" style="margin-bottom: 48px;">
-      <p style="font-family:'Barlow Condensed',sans-serif; font-size:11px; letter-spacing:5px; text-transform:uppercase; color:#aaa; margin-bottom:24px; text-align:center;">Nejnovější příspěvky z Instagramu · @rakettaci_</p>
-      <!-- Elfsight Instagram Feed -->
+    <!-- Elfsight Instagram Feed (veřejné) -->
+    <div style="margin-bottom:56px;">
+      <p style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:5px;text-transform:uppercase;color:#aaa;margin-bottom:24px;text-align:center;">Nejnovější příspěvky z Instagramu · @rakettaci_</p>
       <script src="https://elfsightcdn.com/platform.js" async></script>
       <div class="elfsight-app-3fca6e1a-f36e-4d3d-a542-84882ac33e78" data-elfsight-app-lazy></div>
     </div>
-
-    <hr style="border:none; border-top:1px solid #eee; margin: 48px 0;">
+    <hr style="border:none;border-top:1px solid #eee;margin:0 0 48px;">
 
     <p class="section-label reveal">Pouze pro členy</p>
-    <h2 class="section-title reveal" style="font-size: clamp(32px,4vw,56px);">SOUKROMÁ<br><span style="color:var(--fire)">GALERIE</span></h2>
+    <h2 class="section-title reveal" style="font-size:clamp(30px,4vw,54px);">SOUKROMÁ<br><span style="color:var(--fire)">GALERIE</span></h2>
 
     <!-- Login wall -->
     <div id="gallery-login">
@@ -1810,7 +1794,7 @@
         <div class="contact-info-icon">📧</div>
         <div>
           <div class="contact-info-label">E-mail</div>
-          <div class="contact-info-value"><a href="/cdn-cgi/l/email-protection#daa8bbb1bfaebbb9b3e39abdb7bbb3b6f4b9b5b7"><span class="__cf_email__" data-cfemail="1c6e7d7779687d7f75255c7b717d7570327f7371">[email&#160;protected]</span></a></div>
+          <div class="contact-info-value"><a href="/cdn-cgi/l/email-protection#6012010b05140103095920070d01090c4e030f0d"><span class="__cf_email__" data-cfemail="5f2d3e343a2b3e3c36661f38323e3633713c3032">[email&#160;protected]</span></a></div>
         </div>
       </div>
       <div class="contact-info-item reveal">
@@ -1872,12 +1856,12 @@
 <div id="member-modal">
   <div class="member-modal-box">
     <button class="member-modal-close" onclick="closeMemberModal()">✕ Zavřít</button>
-    <div class="member-modal-photo" id="modal-member-photo">
-      <div class="member-modal-photo-placeholder">🏍️</div>
+    <div class="member-modal-photo" id="modal-photo">
+      <div class="member-modal-placeholder">🏍️</div>
     </div>
-    <div class="member-modal-name" id="modal-member-name"></div>
-    <div class="member-modal-role" id="modal-member-role"></div>
-    <div id="modal-member-ig-wrap"></div>
+    <div class="member-modal-name" id="modal-name"></div>
+    <div class="member-modal-role" id="modal-role"></div>
+    <div id="modal-ig"></div>
   </div>
 </div>
 
@@ -2343,7 +2327,7 @@ function renderMembers(members) {
     return;
   }
   grid.innerHTML = members.map(m => `
-    <div class="member-card reveal-scale" data-id="${m.id}" onclick="openMemberModal(${JSON.stringify(JSON.stringify(m))})">
+    <div class="member-card reveal-scale" data-id="${m.id}" onclick="openMemberModal(m)">
       <div class="member-photo-wrap">
         ${m.photoUrl
           ? `<img src="${m.photoUrl}" alt="${m.name}" onerror="this.parentNode.innerHTML='<div class=member-photo-placeholder>🏍️</div>'">`
@@ -2450,18 +2434,16 @@ async function deleteMember(docId) {
 window.deleteMember = deleteMember;
 
 // ---- MEMBER MODAL ----
-function openMemberModal(mJson) {
-  const m = JSON.parse(mJson);
-  const photoWrap = document.getElementById('modal-member-photo');
-  photoWrap.innerHTML = m.photoUrl
+function openMemberModal(m) {
+  document.getElementById('modal-photo').innerHTML = m.photoUrl
     ? `<img src="${m.photoUrl}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`
-    : `<div class="member-modal-photo-placeholder">🏍️</div>`;
-  document.getElementById('modal-member-name').textContent = m.name;
-  document.getElementById('modal-member-role').textContent = m.role || '';
-  document.getElementById('modal-member-role').style.display = m.role ? 'block' : 'none';
-  const igWrap = document.getElementById('modal-member-ig-wrap');
-  igWrap.innerHTML = m.instagramUrl
-    ? `<a href="${m.instagramUrl}" target="_blank" class="member-modal-ig"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Zobrazit Instagram</a>`
+    : '<div class="member-modal-placeholder">🏍️</div>';
+  document.getElementById('modal-name').textContent = m.name;
+  const roleEl = document.getElementById('modal-role');
+  roleEl.textContent = m.role || '';
+  roleEl.style.display = m.role ? 'block' : 'none';
+  document.getElementById('modal-ig').innerHTML = m.instagramUrl
+    ? `<a href="${m.instagramUrl}" target="_blank" class="member-modal-ig"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Zobrazit Instagram</a>`
     : '';
   document.getElementById('member-modal').classList.add('open');
   document.body.style.overflow = 'hidden';
@@ -2477,6 +2459,7 @@ window.closeMemberModal = closeMemberModal;
 document.getElementById('member-modal').addEventListener('click', e => {
   if (e.target === document.getElementById('member-modal')) closeMemberModal();
 });
+
 
 // Load members on page start (public)
 loadMembers();
