@@ -1861,7 +1861,7 @@
         <div class="contact-info-icon">📧</div>
         <div>
           <div class="contact-info-label">E-mail</div>
-          <div class="contact-info-value"><a href="/cdn-cgi/l/email-protection#88fae9e3edfce9ebe1b1c8efe5e9e1e4a6ebe7e5"><span class="__cf_email__" data-cfemail="dba9bab0beafbab8b2e29bbcb6bab2b7f5b8b4b6">[email&#160;protected]</span></a></div>
+          <div class="contact-info-value"><a href="mailto:rakettaci@email.cz">rakettaci@email.cz</a></div>
         </div>
       </div>
       <div class="contact-info-item reveal">
@@ -1974,7 +1974,7 @@
   <div id="lightbox-zoom-hint">Scroll pro zoom · Klik mimo pro zavřít</div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script type="module">
 document.querySelectorAll('a, button, input, .video-card, .photo-item').forEach(el => {
   el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
   el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
@@ -2412,8 +2412,10 @@ function renderMembers(members) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#bbb;">Zatím žádní členové. Admin může přidat.</div>`;
     return;
   }
-  grid.innerHTML = members.map(m => `
-    <div class="member-card reveal-scale" data-id="${m.id}" onclick="openMemberModal(${JSON.stringify(JSON.stringify(m))})">
+  // Store member data globally so onclick can reference by index
+  window._membersData = members;
+  grid.innerHTML = members.map((m, idx) => `
+    <div class="member-card reveal-scale" data-id="${m.id}" data-member-idx="${idx}" onclick="openMemberModal(${idx})">
       <div class="member-photo-wrap">
         ${m.photoUrl
           ? `<img src="${m.photoUrl}" alt="${m.name}" onerror="this.parentNode.innerHTML='<div class=member-photo-placeholder>🏍️</div>'">`
@@ -2520,8 +2522,9 @@ async function deleteMember(docId) {
 window.deleteMember = deleteMember;
 
 // ---- MEMBER MODAL ----
-function openMemberModal(mJson) {
-  const m = JSON.parse(mJson);
+function openMemberModal(idx) {
+  const m = (window._membersData || [])[idx];
+  if (!m) return;
   const photoWrap = document.getElementById('modal-photo-wrap');
   document.getElementById('modal-member-name').textContent = m.name || '';
   const roleEl = document.getElementById('modal-member-role');
