@@ -1077,8 +1077,8 @@
 
   /* ---- REVEAL ANIMATIONS ---- */
   .reveal {
-    opacity: 0;
-    transform: translateY(40px);
+    opacity: 1;
+    transform: translateY(0);
     transition: opacity 0.8s ease, transform 0.8s ease;
   }
   .reveal.visible {
@@ -1112,13 +1112,13 @@
     to   { clip-path: inset(0 0% 0 0); }
   }
 
-  .reveal-left  { opacity:0; transform:translateX(-60px); transition: opacity .8s ease, transform .8s ease; }
-  .reveal-right { opacity:0; transform:translateX(60px);  transition: opacity .8s ease, transform .8s ease; }
-  .reveal-scale { opacity:0; transform:scale(0.85);       transition: opacity .7s ease, transform .7s ease; }
+  .reveal-left  { opacity:1; transform:translateX(0); transition: opacity .8s ease, transform .8s ease; }
+  .reveal-right { opacity:1; transform:translateX(0);  transition: opacity .8s ease, transform .8s ease; }
+  .reveal-scale { opacity:1; transform:scale(1);       transition: opacity .7s ease, transform .7s ease; }
   .reveal-left.visible, .reveal-right.visible, .reveal-scale.visible { opacity:1; transform:none; }
 
   /* staggered children */
-  .stagger > * { opacity:0; transform:translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .stagger > * { opacity:1; transform:translateY(0); transition: opacity .6s ease, transform .6s ease; }
   .stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:.05s; }
   .stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:.15s; }
   .stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:.25s; }
