@@ -22,7 +22,7 @@
     --border: #e8e8e8;
   }
 
-  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html, body { overflow-x: hidden; max-width: 100%; }
 
@@ -1937,7 +1937,7 @@
         <div class="contact-info-icon">📧</div>
         <div>
           <div class="contact-info-label">E-mail</div>
-          <div class="contact-info-value"><a href="/cdn-cgi/l/email-protection#b5c7d4ded0c1d4d6dc8cf5d2d8d4dcd99bd6dad8" style="color:inherit;text-decoration:none;"><span class="__cf_email__" data-cfemail="8af8ebe1effeebe9e3b3caede7ebe3e6a4e9e5e7">[email&#160;protected]</span></a></div>
+          <div class="contact-info-value"><a href="mailto:raketaci9@gmail.com" style="color:inherit;text-decoration:none;">raketaci9@gmail.com</a></div>
         </div>
       </div>
       <div class="contact-info-item reveal">
@@ -2076,7 +2076,7 @@
   </div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
 document.querySelectorAll('a, button, input, .video-card, .photo-item').forEach(el => {
   el.addEventListener('mouseenter', () => { cursor.style.transform = 'scale(2)'; ring.style.transform = 'scale(1.5)'; });
   el.addEventListener('mouseleave', () => { cursor.style.transform = 'scale(1)'; ring.style.transform = 'scale(1)'; });
@@ -2886,4 +2886,19 @@ document.getElementById('secret-logo').addEventListener('click', e => {
     logoClicks = 0;
     document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
     setTi
-    setTimeout(() => document.getElementById('login-user').focus
+    setTimeout(() => document.getElementById('login-user').focus(), 600);
+  }
+});
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeVideoModal();
+    closeLightbox();
+    closeMobileMenu();
+    closeMemberModal();
+    closeMemberEditModal();
+  }
+});
+</script>
+</body>
+</html>
