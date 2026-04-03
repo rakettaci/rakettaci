@@ -1484,6 +1484,141 @@
   }
   .video-card:hover .video-thumb-img { transform: scale(1.04); }
   .video-thumb { overflow: hidden; }
+
+  /* ---- MEMBER DETAIL MODAL ---- */
+  #member-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.82);
+    z-index: 6000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    padding: 20px;
+  }
+  #member-modal.open { display: flex; }
+
+  .member-modal-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    width: 100%;
+    max-width: 460px;
+    position: relative;
+    overflow: hidden;
+    animation: modalPop .25s ease;
+  }
+  @keyframes modalPop {
+    from { opacity: 0; transform: scale(0.93) translateY(16px); }
+    to   { opacity: 1; transform: scale(1) translateY(0); }
+  }
+
+  .member-modal-header {
+    background: linear-gradient(135deg, var(--fire) 0%, #a01010 100%);
+    padding: 36px 32px 28px;
+    text-align: center;
+    position: relative;
+  }
+  .member-modal-photo {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 4px solid rgba(255,255,255,0.3);
+    margin: 0 auto 16px;
+    overflow: hidden;
+    background: rgba(255,255,255,0.15);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 48px;
+  }
+  .member-modal-photo img { width:100%; height:100%; object-fit:cover; }
+  .member-modal-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 36px; letter-spacing: 4px;
+    color: #fff; line-height: 1;
+  }
+  .member-modal-role {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 12px; letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(255,255,255,0.7); margin-top: 6px;
+  }
+
+  .member-modal-body {
+    padding: 28px 32px 32px;
+    display: flex; flex-direction: column; gap: 16px;
+    align-items: center; text-align: center;
+  }
+  .member-modal-ig {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 13px; letter-spacing: 3px; text-transform: uppercase;
+    color: #fff; text-decoration: none;
+    background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
+    padding: 12px 24px;
+    transition: opacity .2s, transform .2s;
+  }
+  .member-modal-ig:hover { opacity: .85; transform: scale(1.03); }
+
+  .member-modal-close {
+    position: absolute; top: 12px; right: 16px;
+    background: rgba(255,255,255,0.15); border: none;
+    color: #fff; font-size: 22px; cursor: pointer;
+    width: 36px; height: 36px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .2s;
+    line-height: 1;
+  }
+  .member-modal-close:hover { background: rgba(255,255,255,0.3); }
+
+  /* Admin edit button on card */
+  .member-edit-btn {
+    position: absolute; bottom: 10px; left: 10px;
+    background: rgba(204,26,26,0.85);
+    border: none; color: white;
+    width: 28px; height: 28px; border-radius: 50%;
+    font-size: 13px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .2s;
+  }
+  .member-card:hover .member-edit-btn { opacity: 1; }
+
+  /* ---- MEMBER EDIT MODAL ---- */
+  #member-edit-modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.85);
+    z-index: 7000;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(8px);
+    padding: 20px;
+  }
+  #member-edit-modal.open { display: flex; }
+
+  .member-edit-box {
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    width: 100%; max-width: 480px;
+    padding: 36px 32px;
+    position: relative;
+    animation: modalPop .25s ease;
+  }
+  .member-edit-box h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 3px; color: var(--black);
+    margin-bottom: 24px;
+  }
+  .member-edit-box .edit-fields {
+    display: flex; flex-direction: column; gap: 12px;
+  }
+  .member-edit-actions {
+    display: flex; gap: 12px; margin-top: 20px; flex-wrap: wrap;
+  }
+  .member-edit-close {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; color: #999;
+    font-size: 24px; cursor: pointer; transition: color .2s;
+  }
+  .member-edit-close:hover { color: var(--fire); }
 </style>
 </head>
 <body>
@@ -1606,6 +1741,19 @@
   </div>
 </div>
 
+<!-- INSTAGRAM FEED -->
+<div id="instagram-feed-section" style="background:var(--offwhite); padding:80px 48px;">
+  <div style="max-width:1200px; margin:0 auto;">
+    <p class="section-label reveal">Živý feed</p>
+    <h2 class="section-title reveal">INSTAGRAM<br><span style="color:var(--fire)">FOTKY</span></h2>
+    <div class="reveal" style="margin-top:8px;">
+      <!-- Elfsight Instagram Feed | Untitled Instagram Feed -->
+      <script src="https://elfsightcdn.com/platform.js" async></script>
+      <div class="elfsight-app-3fca6e1a-f36e-4d3d-a542-84882ac33e78" data-elfsight-app-lazy></div>
+    </div>
+  </div>
+</div>
+
 <!-- GALLERY -->
 <div id="gallery">
   <div class="gallery-inner">
@@ -1676,19 +1824,6 @@
   </div>
 </div>
 
-<!-- INSTAGRAM FEED -->
-<div id="instagram-feed-section" style="background:var(--offwhite); padding:80px 48px;">
-  <div style="max-width:1200px; margin:0 auto;">
-    <p class="section-label reveal">Živý feed</p>
-    <h2 class="section-title reveal">INSTAGRAM<br><span style="color:var(--fire)">FOTKY</span></h2>
-    <div class="reveal" style="margin-top:8px;">
-      <!-- Elfsight Instagram Feed | Untitled Instagram Feed -->
-      <script src="https://elfsightcdn.com/platform.js" async></script>
-      <div class="elfsight-app-3fca6e1a-f36e-4d3d-a542-84882ac33e78" data-elfsight-app-lazy></div>
-    </div>
-  </div>
-</div>
-
 <!-- MEMBERS -->
 <div id="members">
   <div class="members-inner">
@@ -1733,7 +1868,7 @@
         <div class="contact-info-icon">📧</div>
         <div>
           <div class="contact-info-label">E-mail</div>
-          <div class="contact-info-value"><a href="mailto:rakettaci9@gmail.com" style="color:inherit;text-decoration:none;">rakettaci9@gmail.com</a></div>
+          <div class="contact-info-value"><a href="mailto:raketaci9@gmail.com" style="color:inherit;text-decoration:none;">raketaci9@gmail.com</a></div>
         </div>
       </div>
       <div class="contact-info-item reveal">
@@ -1812,6 +1947,50 @@
     <button class="lb-btn" onclick="lbReset()" title="Reset">↺</button>
   </div>
   <div id="lightbox-zoom-hint">Scroll pro zoom · Klik mimo pro zavřít</div>
+</div>
+
+<!-- MEMBER DETAIL MODAL -->
+<div id="member-modal">
+  <div class="member-modal-box">
+    <div class="member-modal-header">
+      <button class="member-modal-close" onclick="closeMemberModal()">✕</button>
+      <div class="member-modal-photo" id="mm-photo"></div>
+      <div class="member-modal-name" id="mm-name"></div>
+      <div class="member-modal-role" id="mm-role"></div>
+    </div>
+    <div class="member-modal-body">
+      <a id="mm-instagram" href="#" target="_blank" class="member-modal-ig" style="display:none;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+        Sledovat na Instagramu
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- MEMBER EDIT MODAL -->
+<div id="member-edit-modal">
+  <div class="member-edit-box">
+    <button class="member-edit-close" onclick="closeMemberEditModal()">✕</button>
+    <h3>✏️ UPRAVIT ČLENA</h3>
+    <input type="hidden" id="edit-member-id">
+    <div class="edit-fields">
+      <input class="contact-input" id="edit-member-name" placeholder="Jméno">
+      <input class="contact-input" id="edit-member-role" placeholder="Role (např. Kapitán)">
+      <input class="contact-input" id="edit-member-instagram" placeholder="Instagram URL (volitelné)">
+      <div style="position:relative;">
+        <input type="file" id="edit-member-photo-file" accept="image/*" style="display:none;" onchange="previewEditPhoto(this)">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div id="edit-member-photo-preview" style="width:48px;height:48px;border-radius:50%;border:2px solid #e0e0e0;background:#f5f5f5;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;overflow:hidden;">🏍️</div>
+          <button type="button" onclick="document.getElementById('edit-member-photo-file').click()" style="flex:1;background:none;border:1px dashed #ccc;color:#888;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;padding:14px 12px;cursor:pointer;transition:all .2s;" onmouseover="this.style.borderColor='var(--fire)';this.style.color='var(--fire)'" onmouseout="this.style.borderColor='#ccc';this.style.color='#888'" id="edit-member-photo-btn">📷 Změnit profilovku</button>
+        </div>
+        <p id="edit-member-photo-status" style="font-family:'Barlow Condensed',sans-serif;font-size:11px;letter-spacing:2px;color:#aaa;margin-top:6px;display:none;"></p>
+      </div>
+    </div>
+    <div class="member-edit-actions">
+      <button class="btn-primary" onclick="saveMemberEdit()" id="edit-save-btn" style="border:none;cursor:pointer;font-size:12px;letter-spacing:3px;padding:14px 28px;">Uložit změny →</button>
+      <button onclick="closeMemberEditModal()" style="background:none;border:1px solid #ccc;padding:14px 20px;cursor:pointer;font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#888;transition:all .2s;" onmouseover="this.style.borderColor='var(--fire)';this.style.color='var(--fire)'" onmouseout="this.style.borderColor='#ccc';this.style.color='#888'">Zrušit</button>
+    </div>
+  </div>
 </div>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
@@ -2252,8 +2431,11 @@ function renderMembers(members) {
     grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:3px;text-transform:uppercase;color:#bbb;">Zatím žádní členové. Admin může přidat.</div>`;
     return;
   }
+  // Store members globally for modal access
+  window._membersData = members;
+
   grid.innerHTML = members.map(m => `
-    <div class="member-card reveal-scale" data-id="${m.id}">
+    <div class="member-card reveal-scale" data-id="${m.id}" onclick="openMemberModal('${m.id}')" style="cursor:pointer;">
       <div class="member-photo-wrap">
         ${m.photoUrl
           ? `<img src="${m.photoUrl}" alt="${m.name}" onerror="this.parentNode.innerHTML='<div class=member-photo-placeholder>🏍️</div>'">`
@@ -2262,15 +2444,16 @@ function renderMembers(members) {
       </div>
       <div class="member-name">${m.name}</div>
       ${m.role ? `<div class="member-role">${m.role}</div>` : ''}
-      ${m.instagramUrl ? `<a href="${m.instagramUrl}" target="_blank" class="member-instagram"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="-webkit-text-fill-color:unset;background:none;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Instagram</a>` : ''}
-      <button class="admin-msg-delete member-delete-btn" onclick="deleteMember('${m.id}')" title="Smazat" style="display:none">✕</button>
+      ${m.instagramUrl ? `<a href="${m.instagramUrl}" target="_blank" class="member-instagram" onclick="event.stopPropagation()"><svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" style="-webkit-text-fill-color:unset;background:none;"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg> Instagram</a>` : ''}
+      <button class="admin-msg-delete member-delete-btn" onclick="event.stopPropagation();deleteMember('${m.id}')" title="Smazat" style="display:none">✕</button>
+      <button class="member-edit-btn" onclick="event.stopPropagation();openMemberEditModal('${m.id}')" title="Upravit" style="display:none">✏️</button>
     </div>
   `).join('');
   document.querySelectorAll('.reveal-scale').forEach(r => io.observe(r));
-  // Show delete buttons only for admin
+  // Show admin buttons only for admin
   onAuthStateChanged(auth, user => {
-    document.querySelectorAll('.member-delete-btn').forEach(btn => {
-      btn.style.display = user ? 'block' : 'none';
+    document.querySelectorAll('.member-delete-btn, .member-edit-btn').forEach(btn => {
+      btn.style.display = user ? 'flex' : 'none';
     });
   });
 }
@@ -2358,6 +2541,142 @@ async function deleteMember(docId) {
   }
 }
 window.deleteMember = deleteMember;
+
+// ---- MEMBER DETAIL MODAL ----
+function openMemberModal(memberId) {
+  const m = (window._membersData || []).find(x => x.id === memberId);
+  if (!m) return;
+
+  const photoEl = document.getElementById('mm-photo');
+  photoEl.innerHTML = m.photoUrl
+    ? `<img src="${m.photoUrl}" alt="${m.name}" style="width:100%;height:100%;object-fit:cover;">`
+    : '🏍️';
+
+  document.getElementById('mm-name').textContent = m.name;
+  const roleEl = document.getElementById('mm-role');
+  roleEl.textContent = m.role || '';
+  roleEl.style.display = m.role ? 'block' : 'none';
+
+  const igEl = document.getElementById('mm-instagram');
+  if (m.instagramUrl) {
+    igEl.href = m.instagramUrl;
+    igEl.style.display = 'inline-flex';
+  } else {
+    igEl.style.display = 'none';
+  }
+
+  document.getElementById('member-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+window.openMemberModal = openMemberModal;
+
+function closeMemberModal() {
+  document.getElementById('member-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+window.closeMemberModal = closeMemberModal;
+
+document.getElementById('member-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('member-modal')) closeMemberModal();
+});
+
+// ---- MEMBER EDIT MODAL ----
+function openMemberEditModal(memberId) {
+  const m = (window._membersData || []).find(x => x.id === memberId);
+  if (!m) return;
+  document.getElementById('edit-member-id').value = memberId;
+  document.getElementById('edit-member-name').value = m.name || '';
+  document.getElementById('edit-member-role').value = m.role || '';
+  document.getElementById('edit-member-instagram').value = m.instagramUrl || '';
+  // Preview current photo
+  const prev = document.getElementById('edit-member-photo-preview');
+  prev.innerHTML = m.photoUrl
+    ? `<img src="${m.photoUrl}" style="width:100%;height:100%;object-fit:cover;">`
+    : '🏍️';
+  document.getElementById('edit-member-photo-file').value = '';
+  document.getElementById('edit-member-photo-btn').textContent = '📷 Změnit profilovku';
+  document.getElementById('edit-member-photo-status').style.display = 'none';
+  document.getElementById('member-edit-modal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+window.openMemberEditModal = openMemberEditModal;
+
+function closeMemberEditModal() {
+  document.getElementById('member-edit-modal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+window.closeMemberEditModal = closeMemberEditModal;
+
+document.getElementById('member-edit-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('member-edit-modal')) closeMemberEditModal();
+});
+
+function previewEditPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const prev = document.getElementById('edit-member-photo-preview');
+  const btn = document.getElementById('edit-member-photo-btn');
+  const reader = new FileReader();
+  reader.onload = e => {
+    prev.innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover;">`;
+    btn.textContent = '✓ ' + file.name.substring(0, 20) + (file.name.length > 20 ? '…' : '');
+  };
+  reader.readAsDataURL(file);
+}
+window.previewEditPhoto = previewEditPhoto;
+
+async function saveMemberEdit() {
+  const { updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js");
+  const docId = document.getElementById('edit-member-id').value;
+  const name = document.getElementById('edit-member-name').value.trim();
+  const role = document.getElementById('edit-member-role').value.trim();
+  const instagramUrl = document.getElementById('edit-member-instagram').value.trim();
+  const photoFile = document.getElementById('edit-member-photo-file').files[0];
+  if (!name) { alert('Jméno nesmí být prázdné.'); return; }
+
+  const btn = document.getElementById('edit-save-btn');
+  const status = document.getElementById('edit-member-photo-status');
+  btn.textContent = 'Ukládám...';
+  btn.disabled = true;
+
+  // Get current photoUrl from stored data
+  const current = (window._membersData || []).find(x => x.id === docId);
+  let photoUrl = current?.photoUrl || '';
+
+  if (photoFile) {
+    status.textContent = 'Nahrávám fotku...';
+    status.style.display = 'block';
+    try {
+      const formData = new FormData();
+      formData.append('file', photoFile);
+      formData.append('upload_preset', CLOUDINARY_PRESET);
+      formData.append('folder', 'rakettaci/avatars');
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+        method: 'POST', body: formData
+      });
+      const data = await res.json();
+      if (!data.secure_url) throw new Error(data.error?.message || 'Upload failed');
+      photoUrl = data.secure_url;
+      status.textContent = '✓ Fotka nahrána';
+    } catch(e) {
+      status.textContent = '❌ Chyba při nahrávání fotky';
+      console.error(e);
+    }
+  }
+
+  try {
+    await updateDoc(doc(db, 'members', docId), { name, role, instagramUrl, photoUrl });
+    closeMemberEditModal();
+    loadMembers();
+  } catch(e) {
+    alert('Chyba při ukládání.');
+    console.error(e);
+  } finally {
+    btn.textContent = 'Uložit změny →';
+    btn.disabled = false;
+  }
+}
+window.saveMemberEdit = saveMemberEdit;
 
 // Load members on page start (public)
 loadMembers();
@@ -2475,14 +2794,18 @@ document.getElementById('secret-logo').addEventListener('click', e => {
   if (logoClicks >= 5) {
     logoClicks = 0;
     document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
+    setTi
     setTimeout(() => document.getElementById('login-user').focus(), 600);
   }
 });
+
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') {
     closeVideoModal();
     closeLightbox();
     closeMobileMenu();
+    closeMemberModal();
+    closeMemberEditModal();
   }
 });
 </script>
